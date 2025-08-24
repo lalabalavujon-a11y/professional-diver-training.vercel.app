@@ -70,11 +70,84 @@ export class TempDatabaseStorage {
 
   async getUserProgress(userId: string) {
     try {
-      const result = await db.execute('SELECT * FROM user_progress WHERE user_id = $1', [userId]);
-      return result.rows;
+      // Since user_progress table may not exist, return empty array for now
+      return [];
     } catch (error) {
       console.error('Error fetching user progress:', error);
       return [];
+    }
+  }
+
+  async getQuizAnalytics() {
+    try {
+      // Get quiz completion statistics
+      const quizStats = await db.execute(`
+        SELECT 
+          q.id,
+          q.title,
+          l.title as lesson_title,
+          t.title as track_title,
+          COUNT(CASE WHEN qa.id IS NOT NULL THEN 1 END) as total_attempts,
+          AVG(CASE WHEN qa.score IS NOT NULL THEN qa.score::float END) as avg_score,
+          MAX(CASE WHEN qa.score IS NOT NULL THEN qa.score END) as max_score,
+          MIN(CASE WHEN qa.score IS NOT NULL THEN qa.score END) as min_score
+        FROM quizzes q
+        LEFT JOIN lessons l ON q.lesson_id = l.id
+        LEFT JOIN tracks t ON l.track_id = t.id
+        LEFT JOIN quiz_attempts qa ON q.id = qa.quiz_id
+        GROUP BY q.id, q.title, l.title, t.title
+        ORDER BY total_attempts DESC
+      `);
+
+      // Get track-level analytics
+      const trackStats = await db.execute(`
+        SELECT 
+          t.id,
+          t.title,
+          COUNT(DISTINCT l.id) as total_lessons,
+          COUNT(DISTINCT q.id) as total_quizzes,
+          COUNT(qa.id) as total_attempts,
+          AVG(CASE WHEN qa.score IS NOT NULL THEN qa.score::float END) as avg_score
+        FROM tracks t
+        LEFT JOIN lessons l ON t.id = l.track_id
+        LEFT JOIN quizzes q ON l.id = q.lesson_id
+        LEFT JOIN quiz_attempts qa ON q.id = qa.quiz_id
+        WHERE t.is_published = true
+        GROUP BY t.id, t.title
+        ORDER BY total_attempts DESC
+      `);
+
+      // Get recent quiz attempts for activity feed
+      const recentAttempts = await db.execute(`
+        SELECT 
+          qa.id,
+          qa.score,
+          qa.total_questions,
+          qa.created_at,
+          q.title as quiz_title,
+          l.title as lesson_title,
+          t.title as track_title
+        FROM quiz_attempts qa
+        LEFT JOIN quizzes q ON qa.quiz_id = q.id
+        LEFT JOIN lessons l ON q.lesson_id = l.id
+        LEFT JOIN tracks t ON l.track_id = t.id
+        ORDER BY qa.created_at DESC
+        LIMIT 20
+      `);
+
+      return {
+        quizStats: quizStats.rows,
+        trackStats: trackStats.rows,
+        recentAttempts: recentAttempts.rows
+      };
+    } catch (error) {
+      console.error('Error fetching quiz analytics:', error);
+      // Return empty data structure
+      return {
+        quizStats: [],
+        trackStats: [],
+        recentAttempts: []
+      };
     }
   }
 }

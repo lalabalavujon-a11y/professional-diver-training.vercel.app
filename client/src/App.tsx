@@ -12,6 +12,7 @@ import Quiz from "@/pages/quiz";
 import AdminDashboard from "@/pages/admin-dashboard";
 import AdminInvites from "@/pages/admin-invites";
 import AdminLessonEditor from "@/pages/admin-lesson-editor";
+import Analytics from "@/pages/analytics";
 import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
 
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/invites" component={AdminInvites} />
       <Route path="/admin/lessons/:id" component={AdminLessonEditor} />
+      <Route path="/analytics" component={Analytics} />
       <Route path="/invite/:token" component={Invite} />
       <Route path="/signin" component={SignIn} />
       <Route component={NotFound} />

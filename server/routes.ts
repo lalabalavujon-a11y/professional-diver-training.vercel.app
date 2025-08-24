@@ -102,6 +102,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Analytics routes
+  app.get("/api/analytics/quiz", async (req, res) => {
+    try {
+      const analytics = await tempStorage.getQuizAnalytics();
+      res.json(analytics);
+    } catch (error) {
+      console.error('Quiz analytics API error:', error);
+      res.status(500).json({ error: "Failed to fetch quiz analytics" });
+    }
+  });
+
   // User progress routes
   app.get("/api/users/current/progress", async (req, res) => {
     try {
