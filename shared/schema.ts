@@ -1,9 +1,12 @@
 import { sql, relations } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp, boolean, pgEnum, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const roleEnum = pgEnum("role", ["USER", "ADMIN"]);
+export const questionTypeEnum = pgEnum("question_type", ["MULTIPLE_CHOICE", "TRUE_FALSE", "SHORT_ANSWER"]);
+export const examTypeEnum = pgEnum("exam_type", ["QUIZ", "EXAM", "PRACTICE"]);
+export const certificationStatusEnum = pgEnum("certification_status", ["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "EXPIRED"]);
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -58,6 +61,9 @@ export const tracks = pgTable("tracks", {
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
   summary: text("summary"),
+  aiTutorId: varchar("ai_tutor_id").references(() => aiTutors.id),
+  difficulty: text("difficulty").default("beginner").notNull(), // beginner, intermediate, advanced
+  estimatedHours: integer("estimated_hours").default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   isPublished: boolean("is_published").default(false).notNull(),
 });
@@ -68,6 +74,9 @@ export const lessons = pgTable("lessons", {
   title: text("title").notNull(),
   order: integer("order").default(0).notNull(),
   content: text("content").notNull(),
+  objectives: json("objectives").default([]), // Learning objectives array
+  estimatedMinutes: integer("estimated_minutes").default(30),
+  isRequired: boolean("is_required").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -76,19 +85,23 @@ export const quizzes = pgTable("quizzes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   lessonId: varchar("lesson_id").notNull().references(() => lessons.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
-  timeLimit: integer("time_limit"), // in minutes
+  timeLimit: integer("time_limit").default(30), // in minutes
+  examType: examTypeEnum("exam_type").default("QUIZ").notNull(),
+  passingScore: integer("passing_score").default(70), // percentage
+  maxAttempts: integer("max_attempts").default(3),
+  showFeedback: boolean("show_feedback").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const questions = pgTable("questions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   quizId: varchar("quiz_id").notNull().references(() => quizzes.id, { onDelete: "cascade" }),
+  type: questionTypeEnum("type").default("MULTIPLE_CHOICE").notNull(),
   prompt: text("prompt").notNull(),
-  a: text("a").notNull(),
-  b: text("b").notNull(),
-  c: text("c").notNull(),
-  d: text("d").notNull(),
-  answer: text("answer").notNull(), // 'a', 'b', 'c', or 'd'
+  options: json("options").default([]), // For multiple choice: ["a", "b", "c", "d"], for true/false: ["true", "false"]
+  correctAnswer: text("correct_answer").notNull(), // For MC: "a", for T/F: "true"/"false", for SA: expected answer
+  explanation: text("explanation"), // Detailed feedback explanation
+  points: integer("points").default(1).notNull(),
   order: integer("order").default(0).notNull(),
 });
 
@@ -97,8 +110,13 @@ export const attempts = pgTable("attempts", {
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   quizId: varchar("quiz_id").notNull().references(() => quizzes.id, { onDelete: "cascade" }),
   score: integer("score").notNull(),
-  totalQuestions: integer("total_questions").notNull(),
-  answers: text("answers").notNull(), // JSON string of user answers
+  maxScore: integer("max_score").notNull(),
+  percentage: integer("percentage").notNull(),
+  passed: boolean("passed").notNull(),
+  timeSpent: integer("time_spent"), // in seconds
+  answers: json("answers").notNull(), // Detailed answer tracking
+  feedback: json("feedback").default([]), // Question-by-question feedback
+  startedAt: timestamp("started_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at").defaultNow().notNull(),
 });
 
@@ -106,6 +124,56 @@ export const userProgress = pgTable("user_progress", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   lessonId: varchar("lesson_id").notNull().references(() => lessons.id, { onDelete: "cascade" }),
+  timeSpent: integer("time_spent").default(0), // in minutes
+  completionRate: integer("completion_rate").default(0), // percentage 0-100
+  lastAccessedAt: timestamp("last_accessed_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at").defaultNow().notNull(),
+});
+
+// New tables for enhanced functionality
+export const aiTutors = pgTable("ai_tutors", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  specialty: text("specialty").notNull(), // "NDT", "Diver Medic", "Commercial Dive Supervisor", etc.
+  description: text("description").notNull(),
+  personality: json("personality").default({}), // AI personality traits and teaching style
+  knowledgeBase: json("knowledge_base").default([]), // Specialized knowledge topics
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const practiceScenarios = pgTable("practice_scenarios", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  lessonId: varchar("lesson_id").notNull().references(() => lessons.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  scenario: json("scenario").notNull(), // Detailed scenario data
+  expectedActions: json("expected_actions").default([]), // Expected user responses
+  difficulty: text("difficulty").default("intermediate").notNull(),
+  estimatedMinutes: integer("estimated_minutes").default(15),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const certificates = pgTable("certificates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  trackId: varchar("track_id").notNull().references(() => tracks.id, { onDelete: "cascade" }),
+  status: certificationStatusEnum("status").default("NOT_STARTED").notNull(),
+  progress: integer("progress").default(0), // percentage 0-100
+  finalScore: integer("final_score"),
+  issuedAt: timestamp("issued_at"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const scenarioAttempts = pgTable("scenario_attempts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  scenarioId: varchar("scenario_id").notNull().references(() => practiceScenarios.id, { onDelete: "cascade" }),
+  userActions: json("user_actions").notNull(), // User's actions during scenario
+  score: integer("score").notNull(),
+  feedback: text("feedback"), // AI tutor feedback
+  timeSpent: integer("time_spent"), // in seconds
   completedAt: timestamp("completed_at").defaultNow().notNull(),
 });
 
@@ -116,6 +184,12 @@ export const usersRelations = relations(users, ({ many }) => ({
   attempts: many(attempts),
   progress: many(userProgress),
   createdInvites: many(invites),
+  certificates: many(certificates),
+  scenarioAttempts: many(scenarioAttempts),
+}));
+
+export const aiTutorsRelations = relations(aiTutors, ({ many }) => ({
+  tracks: many(tracks),
 }));
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -139,8 +213,13 @@ export const invitesRelations = relations(invites, ({ one }) => ({
   }),
 }));
 
-export const tracksRelations = relations(tracks, ({ many }) => ({
+export const tracksRelations = relations(tracks, ({ one, many }) => ({
   lessons: many(lessons),
+  aiTutor: one(aiTutors, {
+    fields: [tracks.aiTutorId],
+    references: [aiTutors.id],
+  }),
+  certificates: many(certificates),
 }));
 
 export const lessonsRelations = relations(lessons, ({ one, many }) => ({
@@ -150,6 +229,37 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
   }),
   quizzes: many(quizzes),
   progress: many(userProgress),
+  practiceScenarios: many(practiceScenarios),
+}));
+
+export const practiceScenariosRelations = relations(practiceScenarios, ({ one, many }) => ({
+  lesson: one(lessons, {
+    fields: [practiceScenarios.lessonId],
+    references: [lessons.id],
+  }),
+  attempts: many(scenarioAttempts),
+}));
+
+export const scenarioAttemptsRelations = relations(scenarioAttempts, ({ one }) => ({
+  user: one(users, {
+    fields: [scenarioAttempts.userId],
+    references: [users.id],
+  }),
+  scenario: one(practiceScenarios, {
+    fields: [scenarioAttempts.scenarioId],
+    references: [practiceScenarios.id],
+  }),
+}));
+
+export const certificatesRelations = relations(certificates, ({ one }) => ({
+  user: one(users, {
+    fields: [certificates.userId],
+    references: [users.id],
+  }),
+  track: one(tracks, {
+    fields: [certificates.trackId],
+    references: [tracks.id],
+  }),
 }));
 
 export const quizzesRelations = relations(quizzes, ({ one, many }) => ({
@@ -195,6 +305,27 @@ export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+});
+
+export const insertAiTutorSchema = createInsertSchema(aiTutors).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertPracticeScenarioSchema = createInsertSchema(practiceScenarios).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertCertificateSchema = createInsertSchema(certificates).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertScenarioAttemptSchema = createInsertSchema(scenarioAttempts).omit({
+  id: true,
+  completedAt: true,
 });
 
 export const insertTrackSchema = createInsertSchema(tracks).omit({
@@ -244,3 +375,11 @@ export type InsertAttempt = z.infer<typeof insertAttemptSchema>;
 export type Invite = typeof invites.$inferSelect;
 export type InsertInvite = z.infer<typeof insertInviteSchema>;
 export type UserProgress = typeof userProgress.$inferSelect;
+export type AiTutor = typeof aiTutors.$inferSelect;
+export type InsertAiTutor = z.infer<typeof insertAiTutorSchema>;
+export type PracticeScenario = typeof practiceScenarios.$inferSelect;
+export type InsertPracticeScenario = z.infer<typeof insertPracticeScenarioSchema>;
+export type Certificate = typeof certificates.$inferSelect;
+export type InsertCertificate = z.infer<typeof insertCertificateSchema>;
+export type ScenarioAttempt = typeof scenarioAttempts.$inferSelect;
+export type InsertScenarioAttempt = z.infer<typeof insertScenarioAttemptSchema>;
