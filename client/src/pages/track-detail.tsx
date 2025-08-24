@@ -4,10 +4,13 @@ import Navigation from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "wouter";
+import type { Track, Lesson } from "@shared/schema";
+
+type TrackWithLessons = Track & { lessons: Lesson[] };
 
 export default function TrackDetail() {
   const [, params] = useRoute("/tracks/:slug");
-  const { data: track, isLoading } = useQuery({
+  const { data: track, isLoading } = useQuery<TrackWithLessons>({
     queryKey: ["/api/tracks", params?.slug],
     enabled: !!params?.slug,
   });

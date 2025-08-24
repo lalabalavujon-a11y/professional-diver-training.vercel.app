@@ -5,6 +5,9 @@ import Navigation from "@/components/navigation";
 import QuizQuestion from "@/components/quiz-question";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import type { Quiz, Question } from "@shared/schema";
+
+type QuizWithQuestions = Quiz & { questions: Question[] };
 
 export default function Quiz() {
   const [, params] = useRoute("/lessons/:id/quiz");
@@ -14,7 +17,7 @@ export default function Quiz() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: quiz, isLoading } = useQuery({
+  const { data: quiz, isLoading } = useQuery<QuizWithQuestions>({
     queryKey: ["/api/quizzes/lesson", params?.id],
     enabled: !!params?.id,
   });

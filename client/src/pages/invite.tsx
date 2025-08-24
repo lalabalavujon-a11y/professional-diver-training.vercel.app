@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { LayoutDashboard, Mail, CheckCircle, AlertCircle } from "lucide-react";
+import type { Invite } from "@shared/schema";
 
 export default function Invite() {
   const [, params] = useRoute("/invite/:token");
@@ -15,7 +16,7 @@ export default function Invite() {
   const [isRequesting, setIsRequesting] = useState(false);
   const { toast } = useToast();
 
-  const { data: invite, isLoading, error } = useQuery({
+  const { data: invite, isLoading, error } = useQuery<Invite>({
     queryKey: ["/api/invites", params?.token],
     enabled: !!params?.token,
   });

@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Plus, Trash2 } from "lucide-react";
+import type { Invite } from "@shared/schema";
 
 export default function AdminInvites() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ export default function AdminInvites() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: invites, isLoading } = useQuery({
+  const { data: invites, isLoading } = useQuery<Invite[]>({
     queryKey: ["/api/admin/invites"],
   });
 

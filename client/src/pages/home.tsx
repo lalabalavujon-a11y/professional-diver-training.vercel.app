@@ -3,9 +3,10 @@ import Navigation from "@/components/navigation";
 import HeroSection from "@/components/hero-section";
 import TrackCard from "@/components/track-card";
 import { LayoutDashboard, List } from "lucide-react";
+import type { Track } from "@shared/schema";
 
 export default function Home() {
-  const { data: tracks, isLoading } = useQuery({
+  const { data: tracks, isLoading } = useQuery<Track[]>({
     queryKey: ["/api/tracks"],
   });
 
@@ -59,7 +60,7 @@ export default function Home() {
             </div>
           ) : tracks && tracks.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {tracks.map((track: any, index: number) => (
+              {tracks.map((track, index: number) => (
                 <TrackCard 
                   key={track.id} 
                   track={track}

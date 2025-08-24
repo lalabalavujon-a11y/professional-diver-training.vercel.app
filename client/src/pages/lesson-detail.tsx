@@ -4,10 +4,11 @@ import Navigation from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Bookmark, FileText, Video } from "lucide-react";
 import { Link } from "wouter";
+import type { Lesson } from "@shared/schema";
 
 export default function LessonDetail() {
   const [, params] = useRoute("/lessons/:id");
-  const { data: lesson, isLoading } = useQuery({
+  const { data: lesson, isLoading } = useQuery<Lesson>({
     queryKey: ["/api/lessons", params?.id],
     enabled: !!params?.id,
   });

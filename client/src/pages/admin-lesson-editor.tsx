@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute } from "wouter";
 import Navigation from "@/components/navigation";
@@ -11,6 +11,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronLeft, Save, Eye, Hash, Link, Bold, Italic } from "lucide-react";
 import { Link as RouterLink } from "wouter";
+import type { Lesson, Track } from "@shared/schema";
 
 export default function AdminLessonEditor() {
   const [, params] = useRoute("/admin/lessons/:id");
@@ -22,17 +23,17 @@ export default function AdminLessonEditor() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: lesson, isLoading } = useQuery({
+  const { data: lesson, isLoading } = useQuery<Lesson>({
     queryKey: ["/api/lessons", params?.id],
     enabled: !!params?.id,
   });
 
-  const { data: tracks } = useQuery({
+  const { data: tracks } = useQuery<Track[]>({
     queryKey: ["/api/tracks"],
   });
 
   // Initialize form when lesson data loads
-  useState(() => {
+  useEffect(() => {
     if (lesson) {
       setTitle(lesson.title || "");
       setOrder(lesson.order || 1);

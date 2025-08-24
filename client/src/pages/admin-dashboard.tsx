@@ -10,13 +10,20 @@ import {
   MoreVertical 
 } from "lucide-react";
 import { Link } from "wouter";
+import type { Invite } from "@shared/schema";
+
+type DashboardStats = {
+  activeUsers: number;
+  totalLessons: number;
+  completions: { month: string; completed: number }[];
+};
 
 export default function AdminDashboard() {
-  const { data: invites } = useQuery({
+  const { data: invites } = useQuery<Invite[]>({
     queryKey: ["/api/admin/invites"],
   });
 
-  const { data: stats } = useQuery({
+  const { data: stats } = useQuery<DashboardStats>({
     queryKey: ["/api/admin/stats"],
   });
 
@@ -107,7 +114,7 @@ export default function AdminDashboard() {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-green-600">Completions</p>
                       <p className="text-2xl font-bold text-green-900" data-testid="text-completions">
-                        {stats?.completions || 89}
+                        {stats?.completions?.length || 89}
                       </p>
                     </div>
                   </div>
