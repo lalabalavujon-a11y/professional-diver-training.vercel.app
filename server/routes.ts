@@ -102,6 +102,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Client Management routes
+  app.get("/api/clients", async (req, res) => {
+    try {
+      const clients = await tempStorage.getAllClients();
+      res.json(clients);
+    } catch (error) {
+      console.error('Get clients API error:', error);
+      res.status(500).json({ error: "Failed to fetch clients" });
+    }
+  });
+
+  app.post("/api/clients", async (req, res) => {
+    try {
+      const client = await tempStorage.createClient(req.body);
+      res.json(client);
+    } catch (error) {
+      console.error('Create client API error:', error);
+      res.status(500).json({ error: "Failed to create client" });
+    }
+  });
+
+  app.put("/api/clients/:id", async (req, res) => {
+    try {
+      const client = await tempStorage.updateClient(req.params.id, req.body);
+      res.json(client);
+    } catch (error) {
+      console.error('Update client API error:', error);
+      res.status(500).json({ error: "Failed to update client" });
+    }
+  });
+
+  app.delete("/api/clients/:id", async (req, res) => {
+    try {
+      const result = await tempStorage.deleteClient(req.params.id);
+      res.json(result);
+    } catch (error) {
+      console.error('Delete client API error:', error);
+      res.status(500).json({ error: "Failed to delete client" });
+    }
+  });
+
+  app.get("/api/clients/stats", async (req, res) => {
+    try {
+      const stats = await tempStorage.getClientStats();
+      res.json(stats);
+    } catch (error) {
+      console.error('Client stats API error:', error);
+      res.status(500).json({ error: "Failed to fetch client stats" });
+    }
+  });
+
   // Analytics routes
   app.get("/api/analytics/quiz", async (req, res) => {
     try {

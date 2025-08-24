@@ -78,6 +78,88 @@ export class TempDatabaseStorage {
     }
   }
 
+  // Client Management
+  async getAllClients() {
+    try {
+      const result = await db.execute(`
+        SELECT id, name, email, subscription_type, status, subscription_date, monthly_revenue, notes, created_at, updated_at 
+        FROM clients 
+        ORDER BY created_at DESC
+      `);
+      return result.rows;
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+      return [];
+    }
+  }
+
+  async createClient(client: any) {
+    try {
+      const result = await db.execute(`
+        INSERT INTO clients (name, email, subscription_type, status, subscription_date, monthly_revenue, notes) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7) 
+        RETURNING *
+      `, [client.name, client.email, client.subscriptionType, client.status, client.subscriptionDate, client.monthlyRevenue, client.notes]);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error creating client:', error);
+      throw error;
+    }
+  }
+
+  async updateClient(id: string, updates: any) {
+    try {
+      const result = await db.execute(`
+        UPDATE clients 
+        SET name = $2, email = $3, subscription_type = $4, status = $5, subscription_date = $6, monthly_revenue = $7, notes = $8, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1 
+        RETURNING *
+      `, [id, updates.name, updates.email, updates.subscriptionType, updates.status, updates.subscriptionDate, updates.monthlyRevenue, updates.notes]);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error updating client:', error);
+      throw error;
+    }
+  }
+
+  async deleteClient(id: string) {
+    try {
+      await db.execute('DELETE FROM clients WHERE id = $1', [id]);
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      throw error;
+    }
+  }
+
+  async getClientStats() {
+    try {
+      const totalResult = await db.execute('SELECT COUNT(*) as total FROM clients');
+      const total = parseInt(totalResult.rows[0].total);
+
+      const activeResult = await db.execute("SELECT COUNT(*) as active FROM clients WHERE status = 'ACTIVE'");
+      const active = parseInt(activeResult.rows[0].active);
+
+      const revenueResult = await db.execute("SELECT SUM(monthly_revenue) as mrr FROM clients WHERE status = 'ACTIVE'");
+      const totalMRR = parseInt(revenueResult.rows[0].mrr || 0);
+
+      return {
+        totalClients: total,
+        activeClients: active,
+        monthlyRecurringRevenue: totalMRR,
+        lastUpdated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error fetching client stats:', error);
+      return {
+        totalClients: 0,
+        activeClients: 0,
+        monthlyRecurringRevenue: 0,
+        lastUpdated: new Date().toISOString()
+      };
+    }
+  }
+
   async getQuizAnalytics() {
     try {
       // Get quiz completion statistics

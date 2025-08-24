@@ -7,6 +7,8 @@ export const roleEnum = pgEnum("role", ["USER", "ADMIN"]);
 export const questionTypeEnum = pgEnum("question_type", ["MULTIPLE_CHOICE", "TRUE_FALSE", "SHORT_ANSWER"]);
 export const examTypeEnum = pgEnum("exam_type", ["QUIZ", "EXAM", "PRACTICE"]);
 export const certificationStatusEnum = pgEnum("certification_status", ["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "EXPIRED"]);
+export const subscriptionTypeEnum = pgEnum("subscription_type", ["TRIAL", "MONTHLY", "ANNUAL"]);
+export const clientStatusEnum = pgEnum("client_status", ["ACTIVE", "PAUSED", "CANCELLED"]);
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -177,6 +179,19 @@ export const scenarioAttempts = pgTable("scenario_attempts", {
   completedAt: timestamp("completed_at").defaultNow().notNull(),
 });
 
+export const clients = pgTable("clients", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  subscriptionType: subscriptionTypeEnum("subscription_type").default("TRIAL").notNull(),
+  status: clientStatusEnum("status").default("ACTIVE").notNull(),
+  subscriptionDate: timestamp("subscription_date").defaultNow().notNull(),
+  monthlyRevenue: integer("monthly_revenue").default(0).notNull(), // Revenue in cents (e.g., 2500 for $25.00)
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
@@ -328,6 +343,12 @@ export const insertScenarioAttemptSchema = createInsertSchema(scenarioAttempts).
   completedAt: true,
 });
 
+export const insertClientSchema = createInsertSchema(clients).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertTrackSchema = createInsertSchema(tracks).omit({
   id: true,
   createdAt: true,
@@ -383,3 +404,5 @@ export type Certificate = typeof certificates.$inferSelect;
 export type InsertCertificate = z.infer<typeof insertCertificateSchema>;
 export type ScenarioAttempt = typeof scenarioAttempts.$inferSelect;
 export type InsertScenarioAttempt = z.infer<typeof insertScenarioAttemptSchema>;
+export type Client = typeof clients.$inferSelect;
+export type InsertClient = z.infer<typeof insertClientSchema>;
