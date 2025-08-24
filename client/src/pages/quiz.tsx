@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute } from "wouter";
 import Navigation from "@/components/navigation";
 import QuizQuestion from "@/components/quiz-question";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { AlertCircle, Clock } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { Quiz, Question } from "@shared/schema";
 
 type QuizWithQuestions = Quiz & { questions: Question[] };
@@ -13,13 +15,22 @@ export default function Quiz() {
   const [, params] = useRoute("/lessons/:id/quiz");
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [timeRemaining, setTimeRemaining] = useState(522); // 8:42 in seconds
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [showTimeWarning, setShowTimeWarning] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: quiz, isLoading } = useQuery<QuizWithQuestions>({
     queryKey: ["/api/quizzes/lesson", params?.id],
     enabled: !!params?.id,
+    onSuccess: (data) => {
+      if (data && !quizStarted && timeRemaining === null) {
+        const timeLimit = data.timeLimit || 30; // Default 30 minutes
+        setTimeRemaining(timeLimit * 60); // Convert to seconds
+      }
+    },
   });
 
   const submitAttemptMutation = useMutation({
@@ -41,6 +52,74 @@ export default function Quiz() {
       });
     },
   });
+
+  // Auto-submit quiz function
+  const autoSubmitQuiz = useCallback(() => {
+    if (!quizSubmitted) {
+      const score = Object.entries(answers).reduce((correct, [questionId, answer]) => {
+        const question = quiz?.questions.find((q: any) => q.id === questionId);
+        return question?.answer === answer ? correct + 1 : correct;
+      }, 0);
+
+      submitAttemptMutation.mutate({
+        userId: "current-user",
+        quizId: quiz?.id,
+        score,
+        totalQuestions: quiz?.questions.length || 0,
+        answers: JSON.stringify(answers),
+      });
+      
+      toast({
+        title: "Time's Up!",
+        description: "Quiz has been automatically submitted.",
+        variant: "destructive",
+      });
+    }
+  }, [quizSubmitted, answers, quiz, submitAttemptMutation, toast]);
+
+  // Timer countdown effect
+  useEffect(() => {
+    if (!quizStarted || timeRemaining === null || timeRemaining <= 0 || quizSubmitted) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev === null || prev <= 1) {
+          autoSubmitQuiz();
+          return 0;
+        }
+        
+        // Show warning at 5 minutes (300 seconds)
+        if (prev === 301) {
+          setShowTimeWarning(true);
+          toast({
+            title: "Time Warning!",
+            description: "5 minutes remaining in your exam.",
+            variant: "destructive",
+          });
+        }
+        
+        // Show final warning at 1 minute (60 seconds)
+        if (prev === 61) {
+          toast({
+            title: "Final Warning!",
+            description: "1 minute remaining in your exam.",
+            variant: "destructive",
+          });
+        }
+        
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [quizStarted, timeRemaining, quizSubmitted, autoSubmitQuiz, toast]);
+
+  // Start quiz function
+  const startQuiz = () => {
+    setQuizStarted(true);
+  };
 
   if (isLoading) {
     return (

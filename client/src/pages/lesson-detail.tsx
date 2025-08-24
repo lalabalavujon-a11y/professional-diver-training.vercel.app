@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute } from "wouter";
 import Navigation from "@/components/navigation";
+import AITutor from "@/components/ai-tutor";
+import PracticeScenario from "@/components/practice-scenario";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Bookmark, FileText, Video } from "lucide-react";
 import { Link } from "wouter";
@@ -181,6 +183,12 @@ export default function LessonDetail() {
             </div>
           </div>
         </section>
+
+        {/* AI Tutor Integration */}
+        <AITutor trackSlug="inspection-ndt" lessonTitle={lesson.title} />
+        
+        {/* Practice Scenarios */}
+        <PracticeScenario trackSlug="inspection-ndt" />
       </main>
     </div>
   );
