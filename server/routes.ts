@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { tempStorage } from "./temp-storage";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 
@@ -19,9 +20,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Tracks routes
   app.get("/api/tracks", async (req, res) => {
     try {
-      const tracks = await storage.getAllTracks();
+      const tracks = await tempStorage.getAllTracks();
       res.json(tracks);
     } catch (error) {
+      console.error('Tracks API error:', error);
       res.status(500).json({ error: "Failed to fetch tracks" });
     }
   });
@@ -29,12 +31,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/tracks/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
-      const track = await storage.getTrackBySlug(slug);
+      const track = await tempStorage.getTrackBySlug(slug);
       if (!track) {
         return res.status(404).json({ error: "Track not found" });
       }
       res.json(track);
     } catch (error) {
+      console.error('Track by slug API error:', error);
       res.status(500).json({ error: "Failed to fetch track" });
     }
   });
@@ -43,12 +46,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/lessons/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const lesson = await storage.getLessonById(id);
+      const lesson = await tempStorage.getLessonById(id);
       if (!lesson) {
         return res.status(404).json({ error: "Lesson not found" });
       }
       res.json(lesson);
     } catch (error) {
+      console.error('Lesson API error:', error);
       res.status(500).json({ error: "Failed to fetch lesson" });
     }
   });
@@ -74,12 +78,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/quizzes/lesson/:lessonId", async (req, res) => {
     try {
       const { lessonId } = req.params;
-      const quiz = await storage.getQuizByLessonId(lessonId);
+      const quiz = await tempStorage.getQuizByLessonId(lessonId);
       if (!quiz) {
         return res.status(404).json({ error: "Quiz not found" });
       }
       res.json(quiz);
     } catch (error) {
+      console.error('Quiz API error:', error);
       res.status(500).json({ error: "Failed to fetch quiz" });
     }
   });
@@ -97,12 +102,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User progress routes
+  app.get("/api/users/current/progress", async (req, res) => {
+    try {
+      // For now, return empty progress since we don't have user auth
+      const progress = await tempStorage.getUserProgress("temp-user");
+      res.json(progress);
+    } catch (error) {
+      console.error('User progress API error:', error);
+      res.status(500).json({ error: "Failed to fetch user progress" });
+    }
+  });
+
   // Admin routes
   app.get("/api/admin/invites", async (req, res) => {
     try {
-      const invites = await storage.getAllInvites();
+      const invites = await tempStorage.getAllInvites();
       res.json(invites);
     } catch (error) {
+      console.error('Admin invites API error:', error);
       res.status(500).json({ error: "Failed to fetch invites" });
     }
   });
