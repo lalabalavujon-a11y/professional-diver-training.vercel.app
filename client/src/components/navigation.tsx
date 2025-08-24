@@ -36,6 +36,15 @@ export default function Navigation() {
                   Dashboard
                 </a>
               </Link>
+              <Link href="/crm" data-testid="link-crm">
+                <a className={`font-medium transition-colors ${
+                  location === "/crm" 
+                    ? "text-slate-900" 
+                    : "text-slate-600 hover:text-slate-900"
+                }`}>
+                  CRM
+                </a>
+              </Link>
               <Link href="/admin" data-testid="link-admin">
                 <a className={`font-medium transition-colors ${
                   location.startsWith("/admin") 

@@ -65,7 +65,7 @@ export default function CRMDashboard() {
 
   // Mutations
   const createClientMutation = useMutation({
-    mutationFn: (newClient: Partial<Client>) => apiRequest("/api/clients", { method: "POST", body: newClient }),
+    mutationFn: (newClient: Partial<Client>) => apiRequest("/api/clients", "POST", newClient),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
       queryClient.invalidateQueries({ queryKey: ["/api/clients/stats"] });
@@ -79,7 +79,7 @@ export default function CRMDashboard() {
 
   const updateClientMutation = useMutation({
     mutationFn: ({ id, ...updates }: { id: string } & Partial<Client>) => 
-      apiRequest(`/api/clients/${id}`, { method: "PUT", body: updates }),
+      apiRequest(`/api/clients/${id}`, "PUT", updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
       queryClient.invalidateQueries({ queryKey: ["/api/clients/stats"] });
@@ -92,7 +92,7 @@ export default function CRMDashboard() {
   });
 
   const deleteClientMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/clients/${id}`, { method: "DELETE" }),
+    mutationFn: (id: string) => apiRequest(`/api/clients/${id}`, "DELETE"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
       queryClient.invalidateQueries({ queryKey: ["/api/clients/stats"] });
