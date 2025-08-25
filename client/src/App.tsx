@@ -25,6 +25,7 @@ import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
 import DemoUsers from "@/pages/demo-users";
 import ProfileSettings from "@/pages/profile-settings";
+import LearningPathSuggestions from "@/pages/learning-path-suggestions";
 
 function Router() {
   return (
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/signin" component={SignIn} />
       <Route path="/demo-users" component={DemoUsers} />
       <Route path="/profile-settings" component={ProfileSettings} />
+      <Route path="/learning-path" component={LearningPathSuggestions} />
       <Route component={NotFound} />
     </Switch>
   );

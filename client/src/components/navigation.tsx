@@ -79,6 +79,15 @@ export default function Navigation() {
                   Editor
                 </a>
               </Link>
+              <Link href="/learning-path" data-testid="link-learning-path">
+                <a className={`font-medium transition-colors ${
+                  location === "/learning-path" 
+                    ? "text-slate-900" 
+                    : "text-slate-600 hover:text-slate-900"
+                }`}>
+                  AI Learning Path
+                </a>
+              </Link>
             </div>
           </div>
           <div className="flex items-center space-x-4">

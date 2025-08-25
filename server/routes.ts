@@ -6,6 +6,7 @@ import { emailMarketing } from "./email-marketing";
 import { affiliateService } from "./affiliate-service";
 import { registerImportRoutes } from "./routes/import-content";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import { aiLearningPathService } from "./ai-learning-path-service";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 
@@ -162,6 +163,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Authentication error:", error);
       res.status(500).json({ error: "Authentication failed" });
+    }
+  });
+
+  // AI Learning Path Routes
+  app.post("/api/learning-path/suggestions", async (req, res) => {
+    try {
+      const { userId, skillLevel, goals, timeAvailable, preferredLearningStyle, certificationGoals } = req.body;
+
+      const userProgress = {
+        userId: userId || 'demo-user',
+        completedLessons: [],
+        skillLevel: skillLevel || 'intermediate',
+        goals: goals || ['certification'],
+        weakAreas: ['gas management'],
+        strengths: ['safety protocols'],
+        timeAvailable: timeAvailable || 10,
+        preferredLearningStyle: preferredLearningStyle || 'mixed',
+        certificationGoals: certificationGoals || ['NDT Inspector']
+      };
+
+      const suggestion = await aiLearningPathService.generateLearningPath(userProgress);
+      res.json(suggestion);
+    } catch (error) {
+      console.error('Error generating learning path suggestions:', error);
+      res.status(500).json({ error: "Failed to generate learning path suggestions" });
+    }
+  });
+
+  app.post("/api/learning-path/analysis", async (req, res) => {
+    try {
+      const { completedLessons, quizScores } = req.body;
+      
+      const analysis = await aiLearningPathService.analyzeLearningStyle(
+        completedLessons || [],
+        quizScores || [85, 92, 78, 95]
+      );
+      
+      res.json(analysis);
+    } catch (error) {
+      console.error('Error analyzing learning style:', error);
+      res.status(500).json({ error: "Failed to analyze learning style" });
+    }
+  });
+
+  app.post("/api/learning-path/career-advice", async (req, res) => {
+    try {
+      const { userId, skillLevel, goals, certificationGoals } = req.body;
+
+      const userProgress = {
+        userId: userId || 'demo-user',
+        completedLessons: [],
+        skillLevel: skillLevel || 'intermediate',
+        goals: goals || ['certification'],
+        weakAreas: [],
+        strengths: [],
+        timeAvailable: 10,
+        preferredLearningStyle: 'mixed',
+        certificationGoals: certificationGoals || ['NDT Inspector']
+      };
+
+      const advice = await aiLearningPathService.generateCareerAdvice(userProgress);
+      res.json(advice);
+    } catch (error) {
+      console.error('Error generating career advice:', error);
+      res.status(500).json({ error: "Failed to generate career advice" });
     }
   });
 
