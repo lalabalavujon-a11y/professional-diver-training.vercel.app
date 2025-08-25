@@ -117,17 +117,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return;
       }
 
-      // Check for lifetime users
-      const lifetimeUsers = [
-        'lalabalavu.jon@gmail.com',
-        'eroni2519@gmail.com',
-        'jone.cirikidaveta@gmail.com', 
-        'jone7898@gmail.com',
-        'samueltabuya35@gmail.com',
-        'jone.viti@gmail.com'
-      ];
+      // Check for lifetime users with their specific passwords
+      const lifetimeUserCredentials = {
+        'lalabalavu.jon@gmail.com': 'Tuikilakila2014',
+        'eroni2519@gmail.com': 'password123',
+        'jone.cirikidaveta@gmail.com': 'password123', 
+        'jone7898@gmail.com': 'password123',
+        'samueltabuya35@gmail.com': 'password123',
+        'jone.viti@gmail.com': 'password123'
+      };
       
-      if (lifetimeUsers.includes(email) && password === 'password123') {
+      if (lifetimeUserCredentials[email] && password === lifetimeUserCredentials[email]) {
         res.json({ 
           success: true, 
           user: {
