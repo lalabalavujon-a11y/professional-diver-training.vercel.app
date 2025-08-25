@@ -32,9 +32,9 @@ export default function Navigation() {
               </a>
             </Link>
             <div className="hidden md:flex space-x-6">
-              <Link href="/" data-testid="link-tracks">
+              <Link href="/tracks" data-testid="link-tracks">
                 <a className={`font-medium transition-colors ${
-                  location === "/" 
+                  location === "/tracks" 
                     ? "text-slate-900" 
                     : "text-slate-600 hover:text-slate-900"
                 }`}>
@@ -131,26 +131,7 @@ export default function Navigation() {
                       </a>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/trial-signup" data-testid="link-trial-signup">
-                      <a className="w-full flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <span>Free Trial</span>
-                      </a>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/login" data-testid="link-login-menu">
-                      <a className="w-full flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                        </svg>
-                        <span>Login</span>
-                      </a>
-                    </Link>
-                  </DropdownMenuItem>
+                  {/* Removed Free Trial and Login - these are for public access, not dashboard users */}
                   
                   <div className="border-t my-2"></div>
                   
@@ -176,20 +157,29 @@ export default function Navigation() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a href="mailto:privacy@diverwell.app" className="w-full flex items-center space-x-2">
+                    <button 
+                      onClick={() => {
+                        const subject = encodeURIComponent('Data Request - Professional Diver Platform');
+                        const body = encodeURIComponent('Please specify what data you would like to request:\n\n1. Account information\n2. Learning progress data\n3. Billing history\n4. Account deletion\n5. Data export\n\nPlease provide details about your request:');
+                        window.open(`mailto:privacy@diverwell.app?subject=${subject}&body=${body}`, '_blank');
+                      }}
+                      className="w-full flex items-center space-x-2 text-left"
+                    >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                       </svg>
                       <span>Data Requests</span>
-                    </a>
+                    </button>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a href="mailto:support@diverwell.app" className="w-full flex items-center space-x-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-                      <span>Support</span>
-                    </a>
+                    <Link href="/chat/laura" data-testid="link-support-laura">
+                      <a className="w-full flex items-center space-x-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Support (Chat with Laura)</span>
+                      </a>
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -201,16 +191,7 @@ export default function Navigation() {
                 Partners
               </a>
             </Link>
-            <button 
-              onClick={() => window.open('https://chatgpt.com/g/g-6897d42d3ba48191b48883a4839c09bf-diver-well-commercial-diver-ai-consultant', '_blank')}
-              className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-              data-testid="button-ai-consultant-header"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-              </svg>
-              AI Consultant
-            </button>
+            {/* Removed duplicate AI Consultant - Laura handles all AI assistance */}
             <UserProfileDropdown />
           </div>
           

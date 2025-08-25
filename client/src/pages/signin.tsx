@@ -318,9 +318,9 @@ export default function SignIn() {
           )}
 
           <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-            <Link href="/">
-              <a className="text-sm text-primary-600 hover:text-primary-700" data-testid="link-back-home">
-                ← Back to Home
+            <Link href="/dashboard">
+              <a className="text-sm text-primary-600 hover:text-primary-700" data-testid="link-back-dashboard">
+                ← Back to Dashboard
               </a>
             </Link>
           </div>

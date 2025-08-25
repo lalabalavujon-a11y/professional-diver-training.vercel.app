@@ -179,9 +179,11 @@ export default function LearningPathSuggestions() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => window.history.back()}>
-                Back to Dashboard
-              </Button>
+              <Link href="/dashboard">
+                <Button variant="outline">
+                  Back to Dashboard
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -273,15 +275,16 @@ export default function LearningPathSuggestions() {
                                 <h5 className="font-medium text-slate-900">{track.trackTitle}</h5>
                                 <p className="text-sm text-slate-600 mt-1">{track.reason}</p>
                               </div>
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => window.location.href = '/'}
-                                data-testid={`button-start-track-${track.trackId}`}
-                              >
-                                <ArrowRight className="w-4 h-4 mr-1" />
-                                Start
-                              </Button>
+                              <Link href={`/tracks/${track.slug || track.trackId}`}>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  data-testid={`button-start-track-${track.trackId}`}
+                                >
+                                  <ArrowRight className="w-4 h-4 mr-1" />
+                                  Start Training
+                                </Button>
+                              </Link>
                             </div>
                           </CardContent>
                         </Card>

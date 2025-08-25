@@ -109,8 +109,14 @@ export default function ChatLaura() {
       return "Perfect! Our learning tracks are designed by industry experts and powered by AI for personalized progression. You have access to all professional diving levels - from basic commercial to advanced supervision and NDT. The AI Learning Path analyzes your progress and creates custom recommendations. Plus, as you advance your career with our training, consider our affiliate program to share this amazing platform with others!";
     }
     
-    // Default response with sales elements
-    return "Hello! I'm Laura, your Platform Oracle for Professional Diver. I'm here to guide you through every aspect of our comprehensive training platform, help with any technical or account issues, and share opportunities like our lucrative 50% commission affiliate program. For diving operations questions, I'll connect you with our exclusive Diver Well AI consultant. For industry connections worldwide, I can direct you to Lead Recon's AI system at leadrecon.net. What can I help you achieve today?";
+    // Admin consultation booking
+    if (input.includes('admin') || input.includes('consultation') || input.includes('book') || input.includes('schedule') || 
+        input.includes('speak to') || input.includes('meeting') || input.includes('call')) {
+      return "I can absolutely help you schedule a consultation with our admin team! For direct admin support, complex account issues, or business consultations, I can arrange a personal meeting. Please provide your preferred date/time and the nature of your inquiry, and I'll coordinate with our admin team to schedule your consultation. You can also reach out directly to support@diverwell.app for immediate admin assistance.";
+    }
+
+    // Default response with sales elements and admin consultation offer
+    return "Hello! I'm Laura, your Platform Oracle for Professional Diver. I'm here to guide you through every aspect of our comprehensive training platform, help with any technical or account issues, and share opportunities like our lucrative 50% commission affiliate program. For diving operations questions, I'll connect you with our exclusive Diver Well AI consultant. For industry connections worldwide, I can direct you to Lead Recon's AI system at leadrecon.net. If you need to speak with an admin directly, I can also schedule consultations! What can I help you achieve today?";
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

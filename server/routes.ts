@@ -127,10 +127,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json({ 
           success: true, 
           user: {
-            id: 'admin-1',
+            id: email === 'sephdee@hotmail.com' ? 'super-admin-2' : 'super-admin-1',
             name: 'Admin User',
             email: email,
-            role: 'ADMIN',
+            role: 'SUPER_ADMIN',
             subscriptionType: 'LIFETIME'
           },
           rememberMe 
@@ -373,10 +373,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Affiliate Program Endpoints
   app.get('/api/affiliate/dashboard', async (req, res) => {
     try {
-      // For demo purposes, return sample affiliate data
-      // In real implementation, get from authenticated user session
-      const dashboardData = await affiliateService.getAffiliateDashboard('demo-affiliate-1');
-      res.json(dashboardData);
+      // Create a demo affiliate if it doesn't exist
+      let demoAffiliate;
+      try {
+        const dashboardData = await affiliateService.getAffiliateDashboard('demo-affiliate-1');
+        res.json(dashboardData);
+        return;
+      } catch (error) {
+        // If affiliate doesn't exist, create it
+        demoAffiliate = await affiliateService.createAffiliate({
+          userId: 'demo-user-1',
+          name: 'Demo Partner',
+          email: 'demo@partner.com'
+        });
+        const dashboardData = await affiliateService.getAffiliateDashboard(demoAffiliate.id);
+        res.json(dashboardData);
+      }
     } catch (error) {
       console.error('Affiliate dashboard error:', error);
       res.status(500).json({ error: 'Failed to load dashboard' });

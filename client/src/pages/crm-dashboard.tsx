@@ -65,7 +65,15 @@ export default function CRMDashboard() {
 
   // Mutations
   const createClientMutation = useMutation({
-    mutationFn: (newClient: Partial<Client>) => apiRequest("/api/clients", "POST", newClient),
+    mutationFn: async (newClient: Partial<Client>) => {
+      try {
+        const response = await apiRequest("/api/clients", "POST", newClient);
+        return response;
+      } catch (error) {
+        console.error('Create client mutation error:', error);
+        throw error;
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
       queryClient.invalidateQueries({ queryKey: ["/api/clients/stats"] });

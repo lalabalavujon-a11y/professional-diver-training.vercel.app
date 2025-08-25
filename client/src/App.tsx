@@ -28,6 +28,8 @@ import ProfileSettings from "@/pages/profile-settings";
 import LearningPathSuggestions from "@/pages/learning-path-suggestions";
 import ChatLaura from "@/pages/chat-laura";
 import Operations from "@/pages/operations";
+import Tracks from "@/pages/tracks";
+import Terms from "@/pages/terms";
 
 function Router() {
   return (
@@ -56,6 +58,8 @@ function Router() {
       <Route path="/learning-path" component={LearningPathSuggestions} />
       <Route path="/chat/laura" component={ChatLaura} />
       <Route path="/operations" component={Operations} />
+      <Route path="/tracks" component={Tracks} />
+      <Route path="/terms" component={Terms} />
       <Route component={NotFound} />
     </Switch>
   );
