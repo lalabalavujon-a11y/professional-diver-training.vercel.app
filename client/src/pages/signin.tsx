@@ -8,6 +8,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { LayoutDashboard, Mail, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { Link } from "wouter";
+import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -76,9 +77,15 @@ export default function SignIn() {
         <CardHeader className="text-center">
           <div className="mx-auto mb-4">
             <Link href="/">
-              <a className="inline-block">
-                <div className="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center">
-                  <LayoutDashboard className="w-6 h-6 text-white" />
+              <a className="flex items-center justify-center space-x-3">
+                <img 
+                  src={diverWellLogo} 
+                  alt="Professional Diver - Diver Well Training" 
+                  className="w-12 h-12 rounded-lg"
+                />
+                <div>
+                  <div className="text-lg font-bold text-slate-900">Professional Diver</div>
+                  <div className="text-xs text-slate-500">Diver Well Training</div>
                 </div>
               </a>
             </Link>

@@ -24,6 +24,11 @@ export default function Landing() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Link href="/affiliate">
+                <a className="text-slate-600 hover:text-slate-900 font-medium" data-testid="link-partners">
+                  Partners
+                </a>
+              </Link>
               <Link href="/login">
                 <a className="text-slate-600 hover:text-slate-900 font-medium" data-testid="link-login">
                   Login

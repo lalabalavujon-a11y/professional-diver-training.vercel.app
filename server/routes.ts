@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { tempStorage } from "./temp-storage";
 import { emailMarketing } from "./email-marketing";
+import { affiliateService } from "./affiliate-service";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 
@@ -134,6 +135,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Review request error:', error);
       res.status(500).json({ error: 'Failed to process review request' });
+    }
+  });
+
+  // Affiliate Program Endpoints
+  app.get('/api/affiliate/dashboard', async (req, res) => {
+    try {
+      // For demo purposes, return sample affiliate data
+      // In real implementation, get from authenticated user session
+      const dashboardData = await affiliateService.getAffiliateDashboard('demo-affiliate-1');
+      res.json(dashboardData);
+    } catch (error) {
+      console.error('Affiliate dashboard error:', error);
+      res.status(500).json({ error: 'Failed to load dashboard' });
+    }
+  });
+
+  app.get('/api/affiliate/leaderboard', async (req, res) => {
+    try {
+      const leaderboard = await affiliateService.getLeaderboard();
+      res.json(leaderboard);
+    } catch (error) {
+      console.error('Leaderboard error:', error);
+      res.status(500).json({ error: 'Failed to load leaderboard' });
+    }
+  });
+
+  app.post('/api/affiliate/track-click', async (req, res) => {
+    try {
+      const { affiliateCode, clickData } = req.body;
+      
+      if (!affiliateCode) {
+        return res.status(400).json({ error: 'Affiliate code is required' });
+      }
+
+      const click = await affiliateService.trackClick(affiliateCode, clickData);
+      res.json({ success: true, clickId: click.id });
+    } catch (error) {
+      console.error('Click tracking error:', error);
+      res.status(500).json({ error: 'Failed to track click' });
+    }
+  });
+
+  app.post('/api/affiliate/convert', async (req, res) => {
+    try {
+      const { affiliateCode, referredUserId, subscriptionType, monthlyValue } = req.body;
+      
+      if (!affiliateCode || !referredUserId || !subscriptionType || !monthlyValue) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+
+      const referral = await affiliateService.processReferral({
+        affiliateCode,
+        referredUserId,
+        subscriptionType,
+        monthlyValue
+      });
+
+      res.json({ success: true, referral });
+    } catch (error) {
+      console.error('Conversion tracking error:', error);
+      res.status(500).json({ error: 'Failed to process conversion' });
+    }
+  });
+
+  app.post('/api/affiliate/create', async (req, res) => {
+    try {
+      const { userId, name, email } = req.body;
+      
+      if (!userId || !name || !email) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+
+      const affiliate = await affiliateService.createAffiliate({ userId, name, email });
+      res.json({ success: true, affiliate });
+    } catch (error) {
+      console.error('Affiliate creation error:', error);
+      res.status(500).json({ error: 'Failed to create affiliate account' });
     }
   });
 

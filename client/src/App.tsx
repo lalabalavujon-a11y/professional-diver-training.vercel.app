@@ -19,6 +19,7 @@ import Landing from "@/pages/landing";
 import TrialSignup from "@/pages/trial-signup";
 import Privacy from "@/pages/privacy";
 import Contact from "@/pages/contact";
+import AffiliateDashboard from "@/pages/affiliate-dashboard";
 import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
 
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/crm" component={CRMDashboard} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/contact" component={Contact} />
+      <Route path="/affiliate" component={AffiliateDashboard} />
       <Route path="/invite/:token" component={Invite} />
       <Route path="/signin" component={SignIn} />
       <Route component={NotFound} />

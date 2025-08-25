@@ -3,11 +3,11 @@ import { pgTable, text, varchar, integer, timestamp, boolean, pgEnum, json } fro
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const roleEnum = pgEnum("role", ["USER", "ADMIN"]);
+export const roleEnum = pgEnum("role", ["USER", "ADMIN", "SUPER_ADMIN", "LIFETIME", "AFFILIATE"]);
 export const questionTypeEnum = pgEnum("question_type", ["MULTIPLE_CHOICE", "TRUE_FALSE", "SHORT_ANSWER"]);
 export const examTypeEnum = pgEnum("exam_type", ["QUIZ", "EXAM", "PRACTICE"]);
 export const certificationStatusEnum = pgEnum("certification_status", ["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "EXPIRED"]);
-export const subscriptionTypeEnum = pgEnum("subscription_type", ["TRIAL", "MONTHLY", "ANNUAL"]);
+export const subscriptionTypeEnum = pgEnum("subscription_type", ["TRIAL", "MONTHLY", "ANNUAL", "LIFETIME"]);
 export const clientStatusEnum = pgEnum("client_status", ["ACTIVE", "PAUSED", "CANCELLED"]);
 
 export const users = pgTable("users", {
@@ -19,6 +19,10 @@ export const users = pgTable("users", {
   trialExpiresAt: timestamp("trial_expires_at"),
   subscriptionStatus: clientStatusEnum("subscription_status").default("ACTIVE").notNull(),
   stripeCustomerId: text("stripe_customer_id"),
+  affiliateCode: varchar("affiliate_code").unique(),
+  referredBy: varchar("referred_by"), // affiliate code of referrer
+  commissionRate: integer("commission_rate").default(0), // percentage (50 = 50%)
+  totalEarnings: integer("total_earnings").default(0), // in cents
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
