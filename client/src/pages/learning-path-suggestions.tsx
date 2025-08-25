@@ -257,7 +257,7 @@ export default function LearningPathSuggestions() {
                     {/* Recommended Tracks */}
                     <div className="space-y-4">
                       <h4 className="font-semibold text-slate-900">Recommended Training Tracks</h4>
-                      {learningPath.tracks.map((track, index) => (
+                      {learningPath.tracks.map((track: any, index: number) => (
                         <Card key={track.trackId} className="border-slate-200">
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between mb-3">
@@ -276,7 +276,7 @@ export default function LearningPathSuggestions() {
                               <Button 
                                 variant="outline" 
                                 size="sm"
-                                onClick={() => window.location.href = `/tracks/${track.trackId}`}
+                                onClick={() => window.location.href = '/'}
                                 data-testid={`button-start-track-${track.trackId}`}
                               >
                                 <ArrowRight className="w-4 h-4 mr-1" />
@@ -301,7 +301,7 @@ export default function LearningPathSuggestions() {
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
-                        {learningPath.nextSteps.map((step, index) => (
+                        {learningPath.nextSteps.map((step: string, index: number) => (
                           <li key={index} className="flex items-start space-x-2">
                             <span className="text-slate-400 mt-1">•</span>
                             <span className="text-sm text-slate-700">{step}</span>
@@ -320,7 +320,7 @@ export default function LearningPathSuggestions() {
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
-                        {learningPath.careerBenefits.map((benefit, index) => (
+                        {learningPath.careerBenefits.map((benefit: string, index: number) => (
                           <li key={index} className="flex items-start space-x-2">
                             <span className="text-slate-400 mt-1">•</span>
                             <span className="text-sm text-slate-700">{benefit}</span>
@@ -341,7 +341,7 @@ export default function LearningPathSuggestions() {
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
-                        {learningPath.prerequisites.map((prereq, index) => (
+                        {learningPath.prerequisites.map((prereq: string, index: number) => (
                           <li key={index} className="flex items-start space-x-2">
                             <span className="text-orange-500 mt-1">•</span>
                             <span className="text-sm text-orange-800">{prereq}</span>
@@ -394,7 +394,7 @@ export default function LearningPathSuggestions() {
                       <div>
                         <h4 className="font-semibold text-slate-900 mb-3">Personalized Recommendations</h4>
                         <div className="space-y-3">
-                          {learningAnalysis.recommendations.map((rec, index) => (
+                          {learningAnalysis.recommendations.map((rec: string, index: number) => (
                             <div key={index} className="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg">
                               <Lightbulb className="w-5 h-5 text-yellow-500 mt-0.5" />
                               <span className="text-sm text-slate-700">{rec}</span>
@@ -443,7 +443,7 @@ export default function LearningPathSuggestions() {
                             <span>Next Certifications</span>
                           </h4>
                           <ul className="space-y-2">
-                            {careerAdvice.nextCertifications.map((cert, index) => (
+                            {careerAdvice.nextCertifications.map((cert: string, index: number) => (
                               <li key={index} className="flex items-center space-x-2">
                                 <CheckCircle className="w-4 h-4 text-green-500" />
                                 <span className="text-sm text-slate-700">{cert}</span>

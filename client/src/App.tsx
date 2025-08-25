@@ -26,6 +26,8 @@ import SignIn from "@/pages/signin";
 import DemoUsers from "@/pages/demo-users";
 import ProfileSettings from "@/pages/profile-settings";
 import LearningPathSuggestions from "@/pages/learning-path-suggestions";
+import ChatLaura from "@/pages/chat-laura";
+import Operations from "@/pages/operations";
 
 function Router() {
   return (
@@ -52,6 +54,8 @@ function Router() {
       <Route path="/demo-users" component={DemoUsers} />
       <Route path="/profile-settings" component={ProfileSettings} />
       <Route path="/learning-path" component={LearningPathSuggestions} />
+      <Route path="/chat/laura" component={ChatLaura} />
+      <Route path="/operations" component={Operations} />
       <Route component={NotFound} />
     </Switch>
   );
