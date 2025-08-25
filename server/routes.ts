@@ -117,9 +117,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return;
       }
 
+      // Check for admin users with their specific passwords
+      const adminCredentials = {
+        'lalabalavu.jon@gmail.com': 'Tuikilakila2014',
+        'sephdee@hotmail.com': 'Password123'
+      };
+
+      if (adminCredentials[email] && password === adminCredentials[email]) {
+        res.json({ 
+          success: true, 
+          user: {
+            id: 'admin-1',
+            name: 'Admin User',
+            email: email,
+            role: 'ADMIN',
+            subscriptionType: 'LIFETIME'
+          },
+          rememberMe 
+        });
+        return;
+      }
+
       // Check for lifetime users with their specific passwords
       const lifetimeUserCredentials = {
-        'lalabalavu.jon@gmail.com': 'Tuikilakila2014',
         'eroni2519@gmail.com': 'password123',
         'jone.cirikidaveta@gmail.com': 'password123', 
         'jone7898@gmail.com': 'password123',
@@ -134,7 +154,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             id: 'lifetime-user',
             name: 'Lifetime Member',
             email: email,
-            role: 'LIFETIME',
+            role: 'USER',
             subscriptionType: 'LIFETIME'
           },
           rememberMe 
