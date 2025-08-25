@@ -24,24 +24,11 @@ export default function Landing() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/affiliate">
-                <a className="text-slate-600 hover:text-slate-900 font-medium" data-testid="link-partners">
-                  Partners
-                </a>
-              </Link>
               <Link href="/login">
                 <a className="text-slate-600 hover:text-slate-900 font-medium" data-testid="link-login">
                   Login
                 </a>
               </Link>
-              <button 
-                onClick={() => window.open('https://chatgpt.com/g/g-6897d42d3ba48191b48883a4839c09bf-diver-well-commercial-diver-ai-consultant', '_blank')}
-                className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-                data-testid="button-ai-consultant-header"
-              >
-                <Brain className="w-4 h-4" />
-                AI Consultant
-              </button>
             </div>
           </div>
         </div>
