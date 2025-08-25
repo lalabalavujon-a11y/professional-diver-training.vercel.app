@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
-import TrialCountdown from "@/components/trial-countdown";
+import UserStatusBadge from "@/components/user-status-badge";
 import { CheckCircle, AlertTriangle, Flame } from "lucide-react";
 
 export default function Dashboard() {
@@ -8,16 +8,31 @@ export default function Dashboard() {
     queryKey: ["/api/users/current/progress"],
   });
 
+  // Get current user data to determine role and subscription
+  const { data: currentUser } = useQuery({
+    queryKey: ["/api/users/current"],
+    queryFn: async () => {
+      // Check for email in localStorage or use demo email
+      const email = localStorage.getItem('userEmail') || 'lalabalavu.jon@gmail.com';
+      const response = await fetch(`/api/users/current?email=${email}`);
+      if (!response.ok) throw new Error('Failed to fetch user');
+      return response.json();
+    }
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Trial Countdown */}
+        {/* User Status Badge */}
         <div className="mb-6">
-          <TrialCountdown 
-            expiresAt={new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()} 
-            showUpgradeButton={true}
+          <UserStatusBadge 
+            role={currentUser?.role || 'USER'}
+            subscriptionType={currentUser?.subscriptionType || 'TRIAL'}
+            subscriptionDate={currentUser?.subscriptionDate}
+            trialExpiresAt={currentUser?.trialExpiresAt || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()}
+            userName={currentUser?.name}
           />
         </div>
 

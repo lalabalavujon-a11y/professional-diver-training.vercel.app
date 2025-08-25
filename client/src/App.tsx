@@ -23,6 +23,7 @@ import AffiliateDashboard from "@/pages/affiliate-dashboard";
 import MarkdownEditor from "@/pages/markdown-editor";
 import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
+import DemoUsers from "@/pages/demo-users";
 
 function Router() {
   return (
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/markdown-editor" component={MarkdownEditor} />
       <Route path="/invite/:token" component={Invite} />
       <Route path="/signin" component={SignIn} />
+      <Route path="/demo-users" component={DemoUsers} />
       <Route component={NotFound} />
     </Switch>
   );

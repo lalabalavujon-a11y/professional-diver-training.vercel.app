@@ -40,7 +40,7 @@ export default function TrialSignup() {
     onSuccess: (data) => {
       setIsSuccess(true);
       toast({
-        title: "Welcome to Diver Well!",
+        title: "Welcome to Professional Diver!",
         description: "Your 24-hour free trial has started. Redirecting to dashboard...",
       });
       // Redirect to dashboard after 2 seconds
@@ -69,7 +69,7 @@ export default function TrialSignup() {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Welcome to Diver Well!</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Welcome to Professional Diver!</h2>
             <p className="text-slate-600 mb-4">
               Your 24-hour free trial has started successfully.
             </p>
@@ -93,9 +93,9 @@ export default function TrialSignup() {
                 <ArrowLeft className="w-5 h-5 text-slate-600" />
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-                    <div className="text-white font-bold text-sm">DW</div>
+                    <div className="text-white font-bold text-sm">PD</div>
                   </div>
-                  <span className="text-lg font-bold text-slate-900">Diver Well</span>
+                  <span className="text-lg font-bold text-slate-900">Professional Diver</span>
                 </div>
               </a>
             </Link>

@@ -403,6 +403,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Current user route
+  app.get("/api/users/current", async (req, res) => {
+    try {
+      // For demo purposes, return different users based on query param
+      const email = req.query.email as string;
+      
+      // Admin account
+      if (email === 'lalabalavu.jon@gmail.com') {
+        res.json({
+          id: 'admin-1',
+          name: 'Admin User',
+          email: 'lalabalavu.jon@gmail.com',
+          role: 'ADMIN',
+          subscriptionType: 'LIFETIME',
+          subscriptionDate: new Date('2024-01-01').toISOString(),
+          trialExpiresAt: null
+        });
+        return;
+      }
+      
+      // Lifetime access users
+      const lifetimeUsers = [
+        'eroni2519@gmail.com',
+        'jone.cirikidaveta@gmail.com', 
+        'jone7898@gmail.com',
+        'samueltabuya35@gmail.com',
+        'jone.viti@gmail.com'
+      ];
+      
+      if (lifetimeUsers.includes(email)) {
+        res.json({
+          id: 'lifetime-user',
+          name: 'Lifetime Member',
+          email: email,
+          role: 'LIFETIME',
+          subscriptionType: 'LIFETIME',
+          subscriptionDate: new Date('2024-01-01').toISOString(),
+          trialExpiresAt: null
+        });
+        return;
+      }
+      
+      // Default trial user
+      res.json({
+        id: 'trial-user',
+        name: 'Trial User',
+        email: email || 'trial@example.com',
+        role: 'USER',
+        subscriptionType: 'TRIAL',
+        subscriptionDate: null,
+        trialExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch current user" });
+    }
+  });
+
   // User progress routes
   app.get("/api/users/:userId/progress", async (req, res) => {
     try {
