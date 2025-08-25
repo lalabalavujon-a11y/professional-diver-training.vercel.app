@@ -86,14 +86,14 @@ export class UserManagementService {
       },
       {
         id: 'lifetime-5',
-        email: 'eroni@pending.com', // Email to follow as mentioned
+        email: 'eroni2519@gmail.com', // Eroni Cirikidaveta
         name: 'Eroni Cirikidaveta',
         role: 'LIFETIME',
         subscriptionType: 'LIFETIME',
-        subscriptionStatus: 'PENDING', // Until email is provided
+        subscriptionStatus: 'ACTIVE', // Email provided
         specialAccess: true,
         purpose: 'Testing and Marketing',
-        note: 'Email address pending from user',
+        note: 'Email address updated',
         createdAt: new Date(),
         updatedAt: new Date(),
       }
