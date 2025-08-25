@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { tempStorage } from "./temp-storage";
 import { emailMarketing } from "./email-marketing";
 import { affiliateService } from "./affiliate-service";
+import { registerImportRoutes } from "./routes/import-content";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 
@@ -437,6 +438,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Failed to validate invite" });
     }
   });
+
+  // Register import routes for GitHub repository content
+  registerImportRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;
