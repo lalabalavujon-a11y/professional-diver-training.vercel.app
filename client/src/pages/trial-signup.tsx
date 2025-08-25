@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Clock, CheckCircle, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import officialLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756117367176.png";
 
 const trialSignupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -92,9 +93,11 @@ export default function TrialSignup() {
               <a className="flex items-center space-x-3" data-testid="link-home">
                 <ArrowLeft className="w-5 h-5 text-slate-600" />
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-                    <div className="text-white font-bold text-sm">PD</div>
-                  </div>
+                  <img 
+                    src={officialLogo}
+                    alt="Professional Diver - Diver Well Training"
+                    className="w-8 h-8 rounded-lg"
+                  />
                   <span className="text-lg font-bold text-slate-900">Professional Diver</span>
                 </div>
               </a>

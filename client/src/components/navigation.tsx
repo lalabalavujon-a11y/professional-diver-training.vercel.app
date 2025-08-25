@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { LayoutDashboard, BookOpen, BarChart3 } from "lucide-react";
 import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
+import UserProfileDropdown from "@/components/user-profile-dropdown";
 
 export default function Navigation() {
   const [location] = useLocation();
@@ -100,12 +101,7 @@ export default function Navigation() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-5 5-5-5h5V7a4 4 0 11-8 0V17"/>
               </svg>
             </button>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                <span className="text-primary-700 font-medium text-sm">JD</span>
-              </div>
-              <span className="text-sm font-medium text-slate-700">John Diver</span>
-            </div>
+            <UserProfileDropdown />
           </div>
         </div>
       </div>
