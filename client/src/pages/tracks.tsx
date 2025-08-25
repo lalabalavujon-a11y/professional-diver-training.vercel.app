@@ -4,7 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Clock, Users, BookOpen, Award, CheckCircle, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
+
+interface Track {
+  id: string;
+  title: string;
+  slug: string;
+  summary: string | null;
+  isPublished: boolean;
+  createdAt: string;
+}
 
 // Mock data for tracks
 const mockTracks = [
@@ -88,7 +98,7 @@ const mockTracks = [
   }
 ];
 
-const levelColors = {
+const levelColors: { [key: string]: string } = {
   "Beginner": "bg-green-100 text-green-800",
   "Intermediate": "bg-blue-100 text-blue-800", 
   "Advanced": "bg-orange-100 text-orange-800",
@@ -96,6 +106,26 @@ const levelColors = {
 };
 
 export default function Tracks() {
+  const { data: apiTracks, isLoading } = useQuery<Track[]>({
+    queryKey: ["/api/tracks"],
+  });
+
+  // Use API data if available, otherwise fall back to mock data
+  const tracks = apiTracks && apiTracks.length > 0 ? 
+    apiTracks.map(track => ({
+      id: track.id,
+      title: track.title,
+      slug: track.slug,
+      description: track.summary || "Professional diving training course",
+      level: "Intermediate", // Default level
+      duration: "8 weeks",
+      lessons: 12,
+      students: Math.floor(Math.random() * 2000) + 500,
+      progress: Math.floor(Math.random() * 100),
+      completed: false,
+      category: "Professional Training"
+    })) : mockTracks;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50">
       <Navigation />
@@ -165,8 +195,22 @@ export default function Tracks() {
         </div>
 
         {/* Tracks Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockTracks.map((track) => (
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="animate-pulse">
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full mb-4"></div>
+                  <div className="h-2 bg-gray-200 rounded w-full mb-4"></div>
+                  <div className="h-8 bg-gray-200 rounded w-full"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tracks.map((track) => (
             <Card key={track.id} className="hover:shadow-lg transition-shadow duration-200">
               <CardHeader>
                 <div className="flex justify-between items-start mb-2">
@@ -225,8 +269,9 @@ export default function Tracks() {
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Call to Action */}
         <div className="mt-12 text-center">
