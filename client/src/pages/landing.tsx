@@ -24,11 +24,7 @@ export default function Landing() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login">
-                <a className="text-slate-600 hover:text-slate-900 font-medium" data-testid="link-login">
-                  Login
-                </a>
-              </Link>
+              {/* Clean sales page - no navigation links */}
             </div>
           </div>
         </div>
