@@ -5,10 +5,85 @@ import { tempStorage } from "./temp-storage";
 import { emailMarketing } from "./email-marketing";
 import { affiliateService } from "./affiliate-service";
 import { registerImportRoutes } from "./routes/import-content";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Object storage routes
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error generating upload URL:", error);
+      res.status(500).json({ error: "Failed to generate upload URL" });
+    }
+  });
+
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error serving object:", error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
+  // User profile routes
+  app.put("/api/users/profile", async (req, res) => {
+    try {
+      const { name, email, phone, bio, company, jobTitle, location, currentEmail } = req.body;
+      const userEmail = req.headers['x-user-email'] || currentEmail || email;
+      
+      // Update the current user's profile (for demo, we'll just return success)
+      res.json({
+        id: 'demo-user',
+        name: name || 'Demo User',
+        email: email || userEmail,
+        phone,
+        bio,
+        company,
+        jobTitle,
+        location,
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      res.status(500).json({ error: "Failed to update profile" });
+    }
+  });
+
+  app.put("/api/users/profile-picture", async (req, res) => {
+    try {
+      const { profilePictureURL } = req.body;
+      const userEmail = req.headers['x-user-email'] as string;
+      
+      if (!profilePictureURL) {
+        return res.status(400).json({ error: "Profile picture URL is required" });
+      }
+
+      // Normalize the object storage URL
+      const objectStorageService = new ObjectStorageService();
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(profilePictureURL);
+
+      res.json({
+        success: true,
+        profilePictureUrl: normalizedPath,
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      res.status(500).json({ error: "Failed to update profile picture" });
+    }
+  });
+
   // Auth routes
   app.get("/api/auth/session", async (req, res) => {
     try {
@@ -17,6 +92,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ user: null });
     } catch (error) {
       res.status(500).json({ error: "Failed to get session" });
+    }
+  });
+
+  // Enhanced authentication route for credentials
+  app.post("/api/auth/credentials", async (req, res) => {
+    try {
+      const { email, password, rememberMe } = req.body;
+
+      // Demo authentication - check against known accounts
+      if (email === 'admin@diverwell.app' && password === 'admin123') {
+        res.json({ 
+          success: true, 
+          user: {
+            id: 'admin-1',
+            name: 'Admin User',
+            email: 'admin@diverwell.app',
+            role: 'ADMIN',
+            subscriptionType: 'LIFETIME'
+          },
+          rememberMe 
+        });
+        return;
+      }
+
+      // Check for lifetime users
+      const lifetimeUsers = [
+        'lalabalavu.jon@gmail.com',
+        'eroni2519@gmail.com',
+        'jone.cirikidaveta@gmail.com', 
+        'jone7898@gmail.com',
+        'samueltabuya35@gmail.com',
+        'jone.viti@gmail.com'
+      ];
+      
+      if (lifetimeUsers.includes(email) && password === 'password123') {
+        res.json({ 
+          success: true, 
+          user: {
+            id: 'lifetime-user',
+            name: 'Lifetime Member',
+            email: email,
+            role: 'LIFETIME',
+            subscriptionType: 'LIFETIME'
+          },
+          rememberMe 
+        });
+        return;
+      }
+
+      // Demo trial user
+      if (password === 'trial123') {
+        res.json({ 
+          success: true, 
+          user: {
+            id: 'trial-user',
+            name: 'Trial User',
+            email: email,
+            role: 'USER',
+            subscriptionType: 'TRIAL',
+            trialExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+          },
+          rememberMe 
+        });
+        return;
+      }
+
+      res.status(401).json({ error: "Invalid credentials" });
+    } catch (error) {
+      console.error("Authentication error:", error);
+      res.status(500).json({ error: "Authentication failed" });
     }
   });
 
@@ -400,6 +545,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: "Failed to delete invite" });
+    }
+  });
+
+  // Object storage routes
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const { ObjectStorageService } = await import("./objectStorage");
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error generating upload URL:", error);
+      res.status(500).json({ error: "Failed to generate upload URL" });
+    }
+  });
+
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    try {
+      const { ObjectStorageService, ObjectNotFoundError } = await import("./objectStorage");
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error serving object:", error);
+      if (error.name === 'ObjectNotFoundError') {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
+  // Profile update routes
+  app.put("/api/users/profile", async (req, res) => {
+    try {
+      const { name, email, phone, bio, company, jobTitle, location, currentEmail } = req.body;
+      const userEmail = req.headers['x-user-email'] || currentEmail || email;
+      
+      // For demo purposes, we'll mock the update
+      const updatedUser = {
+        id: 'user-1',
+        name: name || 'User',
+        email: email || userEmail,
+        phone: phone || '',
+        bio: bio || '',
+        company: company || '',
+        jobTitle: jobTitle || '',
+        location: location || '',
+        role: userEmail === 'lalabalavu.jon@gmail.com' ? 'ADMIN' : 'USER',
+        subscriptionType: userEmail === 'lalabalavu.jon@gmail.com' ? 'LIFETIME' : 'TRIAL',
+        updatedAt: new Date().toISOString(),
+      };
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      res.status(500).json({ error: "Failed to update profile" });
+    }
+  });
+
+  app.put("/api/users/profile-picture", async (req, res) => {
+    try {
+      const { profilePictureURL } = req.body;
+      const userEmail = req.headers['x-user-email'] as string;
+      
+      if (!profilePictureURL) {
+        return res.status(400).json({ error: "Profile picture URL is required" });
+      }
+
+      if (!userEmail) {
+        return res.status(400).json({ error: "User email is required" });
+      }
+
+      // For demo purposes, we'll mock the profile picture update
+      const { ObjectStorageService } = await import("./objectStorage");
+      const objectStorageService = new ObjectStorageService();
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(profilePictureURL);
+
+      const updatedUser = {
+        id: 'user-1',
+        name: 'User',
+        email: userEmail,
+        profilePictureUrl: normalizedPath,
+        role: userEmail === 'lalabalavu.jon@gmail.com' ? 'ADMIN' : 'USER',
+        subscriptionType: userEmail === 'lalabalavu.jon@gmail.com' ? 'LIFETIME' : 'TRIAL',
+        updatedAt: new Date().toISOString(),
+      };
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      res.status(500).json({ error: "Failed to update profile picture" });
     }
   });
 

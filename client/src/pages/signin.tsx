@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { LayoutDashboard, Mail, Eye, EyeOff, AlertCircle } from "lucide-react";
@@ -16,13 +17,38 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [isCredentials, setIsCredentials] = useState(true);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const { toast } = useToast();
 
+  // Load remembered credentials on component mount
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const rememberedPassword = localStorage.getItem('rememberedPassword');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberMe(true);
+    }
+    if (rememberedPassword) {
+      setPassword(rememberedPassword);
+    }
+  }, []);
+
   const credentialsSignInMutation = useMutation({
-    mutationFn: async (credentials: { email: string; password: string }) => {
+    mutationFn: async (credentials: { email: string; password: string; rememberMe: boolean }) => {
       return apiRequest("POST", "/api/auth/credentials", credentials);
     },
     onSuccess: (data) => {
+      // Handle remember me functionality
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', email);
+        localStorage.setItem('rememberedPassword', password);
+        localStorage.setItem('userEmail', email); // For current session
+      } else {
+        localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('rememberedPassword');
+        localStorage.setItem('userEmail', email); // Still set for current session
+      }
+
       toast({
         title: "Welcome back!",
         description: "You have been signed in successfully.",
@@ -62,7 +88,7 @@ export default function SignIn() {
   const handleCredentialsSignIn = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-    credentialsSignInMutation.mutate({ email, password });
+    credentialsSignInMutation.mutate({ email, password, rememberMe });
   };
 
   const handleMagicLinkRequest = (e: React.FormEvent) => {
@@ -201,6 +227,22 @@ export default function SignIn() {
                         )}
                       </button>
                     </div>
+                  </div>
+
+                  {/* Remember Me Checkbox */}
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="remember-me"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                      data-testid="checkbox-remember-me"
+                    />
+                    <label 
+                      htmlFor="remember-me" 
+                      className="text-sm font-medium text-slate-700 cursor-pointer"
+                    >
+                      Remember me
+                    </label>
                   </div>
 
                   <Button 

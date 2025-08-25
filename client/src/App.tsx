@@ -24,6 +24,7 @@ import MarkdownEditor from "@/pages/markdown-editor";
 import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
 import DemoUsers from "@/pages/demo-users";
+import ProfileSettings from "@/pages/profile-settings";
 
 function Router() {
   return (
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/invite/:token" component={Invite} />
       <Route path="/signin" component={SignIn} />
       <Route path="/demo-users" component={DemoUsers} />
+      <Route path="/profile-settings" component={ProfileSettings} />
       <Route component={NotFound} />
     </Switch>
   );

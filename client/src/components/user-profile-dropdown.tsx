@@ -145,24 +145,25 @@ export default function UserProfileDropdown() {
         
         <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={() => toast({
-              title: "Profile Settings",
-              description: "Profile editing coming soon!",
-            })}
+            onClick={() => window.location.href = '/profile-settings'}
             data-testid="menu-profile"
           >
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span>Profile Settings</span>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => toast({
-              title: "Account Settings",
-              description: "Settings panel coming soon!",
-            })}
-            data-testid="menu-settings"
+            onClick={() => window.location.href = '/dashboard'}
+            data-testid="menu-dashboard"
           >
             <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+            <span>Dashboard</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => window.location.href = '/affiliate'}
+            data-testid="menu-affiliate"
+          >
+            <Star className="mr-2 h-4 w-4" />
+            <span>Affiliate Dashboard</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         
