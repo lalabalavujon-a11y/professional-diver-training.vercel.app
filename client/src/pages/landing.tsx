@@ -3,6 +3,7 @@ import { CheckCircle, Clock, BookOpen, Brain, BarChart3, Mic, ChevronRight, Star
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Footer from "@/components/footer";
+import LauraAssistant from "@/components/laura-assistant";
 import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
 
 export default function Landing() {
@@ -295,6 +296,9 @@ export default function Landing() {
 
       {/* Footer */}
       <Footer />
+      
+      {/* Laura Assistant Chat Bubble */}
+      <LauraAssistant />
     </div>
   );
 }

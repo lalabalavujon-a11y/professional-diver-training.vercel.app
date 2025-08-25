@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button";
 import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
 import UserProfileDropdown from "@/components/user-profile-dropdown";
-import DualAIAssistant from "@/components/dual-ai-assistant";
+import LauraAssistant from "@/components/laura-assistant";
 
 export default function Navigation() {
   const [location] = useLocation();
@@ -211,9 +211,11 @@ export default function Navigation() {
               </svg>
               AI Consultant
             </button>
-            <DualAIAssistant />
             <UserProfileDropdown />
           </div>
+          
+          {/* Fixed position Laura Assistant */}
+          <LauraAssistant />
         </div>
       </div>
     </nav>
