@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
+import TrialCountdown from "@/components/trial-countdown";
 import { CheckCircle, AlertTriangle, Flame } from "lucide-react";
 
 export default function Dashboard() {
@@ -12,6 +13,14 @@ export default function Dashboard() {
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Trial Countdown */}
+        <div className="mb-6">
+          <TrialCountdown 
+            expiresAt={new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()} 
+            showUpgradeButton={true}
+          />
+        </div>
+
         <section className="mb-12">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="border-b border-gray-200 px-6 py-4">

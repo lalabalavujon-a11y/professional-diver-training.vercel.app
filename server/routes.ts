@@ -42,6 +42,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Trial signup endpoint
+  app.post('/api/trial-signup', async (req, res) => {
+    try {
+      const { name, email } = req.body;
+      
+      if (!name || !email) {
+        return res.status(400).json({ error: 'Name and email are required' });
+      }
+
+      if (!email.includes('@')) {
+        return res.status(400).json({ error: 'Please enter a valid email address' });
+      }
+
+      const user = await tempStorage.createTrialUser({ name, email });
+      
+      res.json({ 
+        success: true, 
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          subscriptionType: user.subscription_type,
+          trialExpiresAt: user.trial_expires_at
+        }
+      });
+    } catch (error: any) {
+      console.error('Trial signup error:', error);
+      if (error.message.includes('already exists')) {
+        return res.status(409).json({ error: 'An account with this email already exists' });
+      }
+      res.status(500).json({ error: 'Failed to create trial account' });
+    }
+  });
+
+  // Get current user (mock endpoint for trial)
+  app.get('/api/current-user', async (req, res) => {
+    try {
+      // For now, return a mock trial user
+      const mockTrialUser = {
+        id: 'trial-user-1',
+        name: 'Trial User',
+        email: 'trial@example.com',
+        subscriptionType: 'TRIAL',
+        trialExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        subscriptionStatus: 'ACTIVE'
+      };
+      res.json(mockTrialUser);
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+      res.status(500).json({ error: 'Failed to fetch user data' });
+    }
+  });
+
   // Lessons routes
   app.get("/api/lessons/:id", async (req, res) => {
     try {

@@ -15,13 +15,18 @@ import AdminInvites from "@/pages/admin-invites";
 import AdminLessonEditor from "@/pages/admin-lesson-editor";
 import Analytics from "@/pages/analytics";
 import CRMDashboard from "@/pages/crm-dashboard";
+import Landing from "@/pages/landing";
+import TrialSignup from "@/pages/trial-signup";
 import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={Landing} />
+      <Route path="/home" component={Home} />
+      <Route path="/trial-signup" component={TrialSignup} />
+      <Route path="/login" component={SignIn} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/tracks/:slug" component={TrackDetail} />
       <Route path="/lessons/:id" component={LessonDetail} />

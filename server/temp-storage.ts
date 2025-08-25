@@ -232,6 +232,52 @@ export class TempDatabaseStorage {
       };
     }
   }
+
+  // User operations for trial signup
+  async createTrialUser(userData: { name: string; email: string }) {
+    try {
+      // Check if user already exists
+      const existingUserResult = await db.execute('SELECT id FROM users WHERE email = $1', [userData.email]);
+      if (existingUserResult.rows.length > 0) {
+        throw new Error("User already exists with this email");
+      }
+
+      // Create 24-hour trial expiration
+      const trialExpiration = new Date();
+      trialExpiration.setHours(trialExpiration.getHours() + 24);
+
+      const result = await db.execute(`
+        INSERT INTO users (email, name, subscription_type, trial_expires_at, subscription_status) 
+        VALUES ($1, $2, 'TRIAL', $3, 'ACTIVE') 
+        RETURNING *
+      `, [userData.email, userData.name, trialExpiration.toISOString()]);
+      
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error creating trial user:', error);
+      throw error;
+    }
+  }
+
+  async getUserByEmail(email: string) {
+    try {
+      const result = await db.execute('SELECT * FROM users WHERE email = $1', [email]);
+      return result.rows[0] || null;
+    } catch (error) {
+      console.error('Error fetching user by email:', error);
+      return null;
+    }
+  }
+
+  async getUserById(id: string) {
+    try {
+      const result = await db.execute('SELECT * FROM users WHERE id = $1', [id]);
+      return result.rows[0] || null;
+    } catch (error) {
+      console.error('Error fetching user by id:', error);
+      return null;
+    }
+  }
 }
 
 export const tempStorage = new TempDatabaseStorage();
