@@ -11,6 +11,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronLeft, Save, Eye, Hash, Link, Bold, Italic } from "lucide-react";
 import { Link as RouterLink } from "wouter";
+import EnhancedMarkdownEditor from "@/components/enhanced-markdown-editor";
 import type { Lesson, Track } from "@shared/schema";
 
 export default function AdminLessonEditor() {
@@ -19,7 +20,6 @@ export default function AdminLessonEditor() {
   const [order, setOrder] = useState(1);
   const [content, setContent] = useState("");
   const [trackId, setTrackId] = useState("");
-  const [showPreview, setShowPreview] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -71,44 +71,6 @@ export default function AdminLessonEditor() {
     });
   };
 
-  const insertMarkdown = (type: string) => {
-    const textarea = document.getElementById("content-editor") as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = content.substring(start, end);
-
-    let replacement = "";
-    switch (type) {
-      case "bold":
-        replacement = `**${selectedText || "bold text"}**`;
-        break;
-      case "italic":
-        replacement = `*${selectedText || "italic text"}*`;
-        break;
-      case "header":
-        replacement = `## ${selectedText || "Header"}`;
-        break;
-      case "link":
-        replacement = `[${selectedText || "link text"}](https://example.com)`;
-        break;
-      default:
-        return;
-    }
-
-    const newContent = content.substring(0, start) + replacement + content.substring(end);
-    setContent(newContent);
-    
-    // Focus back to textarea
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(
-        start + replacement.length - (selectedText ? 0 : replacement.length - start),
-        start + replacement.length - (selectedText ? 0 : replacement.length - start)
-      );
-    }, 0);
-  };
 
   if (isLoading) {
     return (
@@ -175,14 +137,6 @@ export default function AdminLessonEditor() {
               </div>
               <div className="flex space-x-3">
                 <Button 
-                  variant="outline"
-                  onClick={() => setShowPreview(!showPreview)}
-                  data-testid="button-preview"
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  {showPreview ? "Edit" : "Preview"}
-                </Button>
-                <Button 
                   onClick={handleSave}
                   disabled={updateLessonMutation.isPending}
                   className="bg-primary-500 hover:bg-primary-600 text-white"
@@ -248,86 +202,19 @@ export default function AdminLessonEditor() {
                 </div>
               </div>
 
-              {/* Content Editor */}
+              {/* Enhanced Content Editor */}
               <div>
                 <Label className="block text-sm font-medium text-slate-700 mb-2">
-                  Lesson Content {showPreview ? "(Preview)" : "(Markdown)"}
+                  Lesson Content
                 </Label>
-                {showPreview ? (
-                  <div className="border border-gray-300 rounded-lg p-4 min-h-[500px] bg-white">
-                    <article 
-                      className="prose prose-slate max-w-none"
-                      dangerouslySetInnerHTML={{ 
-                        __html: content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/## (.*?)(<br>|$)/g, '<h2>$1</h2>$2')
-                      }}
-                      data-testid="content-preview"
-                    />
-                  </div>
-                ) : (
-                  <div className="border border-gray-300 rounded-lg overflow-hidden">
-                    <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                      <div className="flex space-x-2">
-                        <button 
-                          type="button" 
-                          onClick={() => insertMarkdown("header")}
-                          className="p-1 text-slate-600 hover:text-slate-900 hover:bg-gray-200 rounded"
-                          title="Header"
-                          data-testid="button-header"
-                        >
-                          <Hash className="w-4 h-4" />
-                        </button>
-                        <button 
-                          type="button" 
-                          onClick={() => insertMarkdown("bold")}
-                          className="p-1 text-slate-600 hover:text-slate-900 hover:bg-gray-200 rounded"
-                          title="Bold"
-                          data-testid="button-bold"
-                        >
-                          <Bold className="w-4 h-4" />
-                        </button>
-                        <button 
-                          type="button" 
-                          onClick={() => insertMarkdown("italic")}
-                          className="p-1 text-slate-600 hover:text-slate-900 hover:bg-gray-200 rounded"
-                          title="Italic"
-                          data-testid="button-italic"
-                        >
-                          <Italic className="w-4 h-4" />
-                        </button>
-                        <button 
-                          type="button" 
-                          onClick={() => insertMarkdown("link")}
-                          className="p-1 text-slate-600 hover:text-slate-900 hover:bg-gray-200 rounded"
-                          title="Link"
-                          data-testid="button-link"
-                        >
-                          <Link className="w-4 h-4" />
-                        </button>
-                        <div className="w-px bg-gray-300 mx-2"></div>
-                        <button 
-                          type="button" 
-                          onClick={() => setShowPreview(true)}
-                          className="text-xs text-slate-600 hover:text-slate-900 px-2 py-1 hover:bg-gray-200 rounded"
-                          data-testid="button-toolbar-preview"
-                        >
-                          Preview
-                        </button>
-                      </div>
-                    </div>
-                    <Textarea 
-                      id="content-editor"
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      rows={20}
-                      className="border-0 focus:ring-0 font-mono text-sm resize-none rounded-none"
-                      placeholder="Enter lesson content in Markdown format..."
-                      data-testid="textarea-content"
-                    />
-                  </div>
-                )}
-                <p className="mt-2 text-sm text-slate-500">
-                  Supports Markdown formatting including headers (##), bold (**text**), italic (*text*), and links ([text](url)).
-                </p>
+                <EnhancedMarkdownEditor
+                  value={content}
+                  onChange={setContent}
+                  placeholder="Write your lesson content using Markdown. Use the toolbar for quick formatting or keyboard shortcuts like Ctrl+B for bold."
+                  height="600px"
+                  showWordCount={true}
+                  showPreview={true}
+                />
               </div>
 
               {/* Action buttons */}

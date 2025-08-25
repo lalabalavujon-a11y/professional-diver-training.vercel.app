@@ -69,6 +69,15 @@ export default function Navigation() {
                   Admin
                 </a>
               </Link>
+              <Link href="/markdown-editor" data-testid="link-markdown-editor">
+                <a className={`font-medium transition-colors ${
+                  location === "/markdown-editor" 
+                    ? "text-slate-900" 
+                    : "text-slate-600 hover:text-slate-900"
+                }`}>
+                  Editor
+                </a>
+              </Link>
             </div>
           </div>
           <div className="flex items-center space-x-4">
