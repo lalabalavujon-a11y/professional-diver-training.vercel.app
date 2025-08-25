@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import { CheckCircle, Clock, BookOpen, Brain, BarChart3, Mic, ChevronRight, Star, Users, Trophy, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Footer from "@/components/footer";
+import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
 
 export default function Landing() {
   return (
@@ -11,12 +13,14 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-                <div className="text-white font-bold text-lg">DW</div>
-              </div>
+              <img 
+                src={diverWellLogo} 
+                alt="Professional Diver - Diver Well Training" 
+                className="w-12 h-12 rounded-lg"
+              />
               <div>
-                <div className="text-xl font-bold text-slate-900">Diver Well</div>
-                <div className="text-xs text-slate-500">Commercial Diving Training</div>
+                <div className="text-xl font-bold text-slate-900">Professional Diver</div>
+                <div className="text-xs text-slate-500">Diver Well Training</div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -302,53 +306,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-                  <div className="text-white font-bold text-lg">DW</div>
-                </div>
-                <div>
-                  <div className="text-lg font-bold">Diver Well</div>
-                  <div className="text-xs text-slate-400">Commercial Diving Training</div>
-                </div>
-              </div>
-              <p className="text-slate-400">
-                Professional diving education platform for commercial diving certification and training.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Features</h4>
-              <ul className="space-y-2 text-slate-400">
-                <li>Timed Mock Exams</li>
-                <li>AI-Powered Learning</li>
-                <li>Voice Technology</li>
-                <li>Progress Analytics</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-slate-400">
-                <li>
-                  <button 
-                    onClick={() => window.open('https://chatgpt.com/g/g-6897d42d3ba48191b48883a4839c09bf-diver-well-commercial-diver-ai-consultant', '_blank')}
-                    className="hover:text-white transition-colors"
-                  >
-                    AI Consultant
-                  </button>
-                </li>
-                <li>Learning Resources</li>
-                <li>Technical Support</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2025 Diver Well. Professional commercial diving education platform.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

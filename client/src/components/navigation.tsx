@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { LayoutDashboard, BookOpen, BarChart3 } from "lucide-react";
+import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
 
 export default function Navigation() {
   const [location] = useLocation();
@@ -11,10 +12,15 @@ export default function Navigation() {
           <div className="flex items-center space-x-8">
             <Link href="/" data-testid="link-home">
               <a className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                  <LayoutDashboard className="w-5 h-5 text-white" />
+                <img 
+                  src={diverWellLogo} 
+                  alt="Professional Diver - Diver Well Training" 
+                  className="w-10 h-10 rounded-lg"
+                />
+                <div>
+                  <h1 className="text-lg font-bold text-slate-900">Professional Diver</h1>
+                  <p className="text-xs text-slate-500">Diver Well Training</p>
                 </div>
-                <h1 className="text-xl font-bold text-slate-900">Diver Well Training</h1>
               </a>
             </Link>
             <div className="hidden md:flex space-x-6">

@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { tempStorage } from "./temp-storage";
+import { emailMarketing } from "./email-marketing";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 
@@ -57,6 +58,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const user = await tempStorage.createTrialUser({ name, email });
       
+      // Send welcome email
+      await emailMarketing.sendWelcomeTrialEmail({ name, email });
+      
       res.json({ 
         success: true, 
         user: {
@@ -73,6 +77,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(409).json({ error: 'An account with this email already exists' });
       }
       res.status(500).json({ error: 'Failed to create trial account' });
+    }
+  });
+
+  // Support ticket endpoints
+  app.post('/api/support/ticket', async (req, res) => {
+    try {
+      const { name, email, subject, message, priority = 'medium' } = req.body;
+      
+      if (!name || !email || !subject || !message) {
+        return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      const ticket = {
+        userId: 'unknown', // Would be from session in real implementation
+        email,
+        name,
+        subject,
+        message,
+        priority,
+        createdAt: new Date()
+      };
+
+      const success = await emailMarketing.sendTicketConfirmation(ticket);
+      
+      if (success) {
+        res.json({ 
+          success: true, 
+          message: 'Support ticket submitted successfully. You will receive a confirmation email shortly.',
+          ticketId: `PDT-${Date.now()}`
+        });
+      } else {
+        res.status(500).json({ error: 'Failed to submit support ticket' });
+      }
+    } catch (error) {
+      console.error('Support ticket error:', error);
+      res.status(500).json({ error: 'Failed to submit support ticket' });
+    }
+  });
+
+  // Request Google review endpoint
+  app.post('/api/support/request-review', async (req, res) => {
+    try {
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ error: 'User ID is required' });
+      }
+
+      await emailMarketing.checkAndRequestReview(userId);
+      
+      res.json({ 
+        success: true, 
+        message: 'Review request processed successfully'
+      });
+    } catch (error) {
+      console.error('Review request error:', error);
+      res.status(500).json({ error: 'Failed to process review request' });
     }
   });
 

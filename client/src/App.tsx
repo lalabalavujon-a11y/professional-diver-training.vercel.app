@@ -17,6 +17,8 @@ import Analytics from "@/pages/analytics";
 import CRMDashboard from "@/pages/crm-dashboard";
 import Landing from "@/pages/landing";
 import TrialSignup from "@/pages/trial-signup";
+import Privacy from "@/pages/privacy";
+import Contact from "@/pages/contact";
 import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
 
@@ -36,6 +38,8 @@ function Router() {
       <Route path="/admin/lessons/:id" component={AdminLessonEditor} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/crm" component={CRMDashboard} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/contact" component={Contact} />
       <Route path="/invite/:token" component={Invite} />
       <Route path="/signin" component={SignIn} />
       <Route component={NotFound} />
