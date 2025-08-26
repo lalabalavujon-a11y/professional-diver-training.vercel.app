@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
 import UserStatusBadge from "@/components/user-status-badge";
 import { CheckCircle, AlertTriangle, Flame } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Dashboard() {
   const { data: userProgress, isLoading } = useQuery({
@@ -161,9 +162,11 @@ export default function Dashboard() {
                       <h4 className="font-semibold text-slate-900" data-testid="text-current-track">Physiology Basics</h4>
                       <p className="text-sm text-slate-600">Next: Circulatory System</p>
                     </div>
-                    <button className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg font-medium transition-colors" data-testid="button-continue">
-                      Continue
-                    </button>
+                    <Link href="/tracks/diving-physiology-basics">
+                      <button className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg font-medium transition-colors" data-testid="button-continue">
+                        Continue
+                      </button>
+                    </Link>
                   </div>
                   <div className="w-full bg-white/50 rounded-full h-2">
                     <div className="bg-primary-500 h-2 rounded-full" style={{ width: "60%" }}></div>
@@ -176,9 +179,11 @@ export default function Dashboard() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-slate-900">Recent Quiz Results</h3>
-                  <button className="text-primary-600 hover:text-primary-700 font-medium text-sm" data-testid="button-view-all">
-                    View All
-                  </button>
+                  <Link href="/analytics">
+                    <button className="text-primary-600 hover:text-primary-700 font-medium text-sm" data-testid="button-view-all">
+                      View All
+                    </button>
+                  </Link>
                 </div>
                 
                 <div className="space-y-3">
