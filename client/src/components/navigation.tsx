@@ -32,22 +32,22 @@ export default function Navigation() {
               </a>
             </Link>
             <div className="hidden md:flex space-x-6">
-              <Link href="/tracks" data-testid="link-tracks">
-                <a className={`font-medium transition-colors ${
-                  location === "/tracks" 
-                    ? "text-slate-900" 
-                    : "text-slate-600 hover:text-slate-900"
-                }`}>
-                  Tracks
-                </a>
-              </Link>
               <Link href="/dashboard" data-testid="link-dashboard">
                 <a className={`font-medium transition-colors ${
                   location === "/dashboard" 
                     ? "text-slate-900" 
                     : "text-slate-600 hover:text-slate-900"
                 }`}>
-                  Dashboard
+                  Professional Exams
+                </a>
+              </Link>
+              <Link href="/tracks" data-testid="link-tracks">
+                <a className={`font-medium transition-colors ${
+                  location === "/tracks" 
+                    ? "text-slate-900" 
+                    : "text-slate-600 hover:text-slate-900"
+                }`}>
+                  Study Materials
                 </a>
               </Link>
               

@@ -29,6 +29,8 @@ import ChatLaura from "@/pages/chat-laura";
 import Operations from "@/pages/operations";
 import Tracks from "@/pages/tracks";
 import Terms from "@/pages/terms";
+import ProfessionalExams from "@/pages/professional-exams";
+import ExamInterface from "@/pages/exam-interface";
 
 function Router() {
   return (
@@ -37,7 +39,10 @@ function Router() {
       <Route path="/home" component={Home} />
       <Route path="/trial-signup" component={TrialSignup} />
       <Route path="/login" component={SignIn} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard" component={ProfessionalExams} />
+      <Route path="/exams" component={ProfessionalExams} />
+      <Route path="/exams/:slug/start" component={ExamInterface} />
+      <Route path="/exams/:slug/results" component={ExamInterface} />
       <Route path="/tracks/:slug" component={TrackDetail} />
       <Route path="/lessons/:id" component={LessonDetail} />
       <Route path="/lessons/:id/quiz" component={Quiz} />
