@@ -1,11 +1,20 @@
 import { db } from "./db";
+import { tracks, lessons, quizzes, questions, invites, clients, users } from "@shared/schema";
+import { eq, sql } from "drizzle-orm";
 
 // Temporary storage class that works with current database structure
 export class TempDatabaseStorage {
   async getAllTracks() {
     try {
-      const result = await db.execute('SELECT id, title, slug, summary, is_published, created_at FROM tracks WHERE is_published = true ORDER BY title');
-      return result.rows;
+      const result = await db.select({
+        id: tracks.id,
+        title: tracks.title,
+        slug: tracks.slug,
+        summary: tracks.summary,
+        isPublished: tracks.isPublished,
+        createdAt: tracks.createdAt,
+      }).from(tracks).where(eq(tracks.isPublished, true)).orderBy(tracks.title);
+      return result;
     } catch (error) {
       console.error('Error fetching tracks:', error);
       throw error;
@@ -14,15 +23,30 @@ export class TempDatabaseStorage {
 
   async getTrackBySlug(slug: string) {
     try {
-      const trackResult = await db.execute(`SELECT id, title, slug, summary, is_published, created_at FROM tracks WHERE slug = $1`, [slug]);
-      const track = trackResult.rows[0];
+      const [track] = await db.select({
+        id: tracks.id,
+        title: tracks.title,
+        slug: tracks.slug,
+        summary: tracks.summary,
+        isPublished: tracks.isPublished,
+        createdAt: tracks.createdAt,
+      }).from(tracks).where(eq(tracks.slug, slug));
+      
       if (!track) return undefined;
 
-      const lessonsResult = await db.execute(`SELECT id, track_id, title, "order", content, created_at, updated_at FROM lessons WHERE track_id = $1 ORDER BY "order"`, [track.id]);
+      const trackLessons = await db.select({
+        id: lessons.id,
+        trackId: lessons.trackId,
+        title: lessons.title,
+        order: lessons.order,
+        content: lessons.content,
+        createdAt: lessons.createdAt,
+        updatedAt: lessons.updatedAt,
+      }).from(lessons).where(eq(lessons.trackId, track.id)).orderBy(lessons.order);
       
       return {
         ...track,
-        lessons: lessonsResult.rows
+        lessons: trackLessons
       };
     } catch (error) {
       console.error('Error fetching track by slug:', error);
@@ -32,8 +56,17 @@ export class TempDatabaseStorage {
 
   async getLessonById(id: string) {
     try {
-      const result = await db.execute(`SELECT id, track_id, title, "order", content, created_at, updated_at FROM lessons WHERE id = $1`, [id]);
-      return result.rows[0] || undefined;
+      const [lesson] = await db.select({
+        id: lessons.id,
+        trackId: lessons.trackId,
+        title: lessons.title,
+        order: lessons.order,
+        content: lessons.content,
+        createdAt: lessons.createdAt,
+        updatedAt: lessons.updatedAt,
+      }).from(lessons).where(eq(lessons.id, id));
+      
+      return lesson || undefined;
     } catch (error) {
       console.error('Error fetching lesson:', error);
       throw error;
@@ -42,15 +75,27 @@ export class TempDatabaseStorage {
 
   async getQuizByLessonId(lessonId: string) {
     try {
-      const quizResult = await db.execute(`SELECT id, lesson_id, title, time_limit FROM quizzes WHERE lesson_id = $1`, [lessonId]);
-      const quiz = quizResult.rows[0];
+      const [quiz] = await db.select({
+        id: quizzes.id,
+        lessonId: quizzes.lessonId,
+        title: quizzes.title,
+        timeLimit: quizzes.timeLimit,
+      }).from(quizzes).where(eq(quizzes.lessonId, lessonId));
+      
       if (!quiz) return undefined;
 
-      const questionsResult = await db.execute(`SELECT id, quiz_id, prompt, a, b, c, d, answer, "order" FROM questions WHERE quiz_id = $1 ORDER BY "order"`, [quiz.id]);
+      const quizQuestions = await db.select({
+        id: questions.id,
+        quizId: questions.quizId,
+        prompt: questions.prompt,
+        options: questions.options,
+        correctAnswer: questions.correctAnswer,
+        order: questions.order,
+      }).from(questions).where(eq(questions.quizId, quiz.id)).orderBy(questions.order);
       
       return {
         ...quiz,
-        questions: questionsResult.rows
+        questions: quizQuestions
       };
     } catch (error) {
       console.error('Error fetching quiz:', error);
@@ -60,8 +105,8 @@ export class TempDatabaseStorage {
 
   async getAllInvites() {
     try {
-      const result = await db.execute('SELECT id, email, token, created_at, expires_at, used_at, created_by_user_id FROM invites ORDER BY created_at DESC');
-      return result.rows;
+      const result = await db.select().from(invites).orderBy(invites.createdAt);
+      return result;
     } catch (error) {
       console.error('Error fetching invites:', error);
       throw error;
