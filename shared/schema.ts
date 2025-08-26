@@ -200,6 +200,21 @@ export const clients = pgTable("clients", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const learningPaths = pgTable("learning_paths", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description"),
+  userProfile: json("user_profile").notNull(), // Store user's profile data
+  suggestedTracks: json("suggested_tracks").notNull(), // Array of track IDs with order and reasoning
+  confidence: integer("confidence").default(0), // AI confidence score 0-100
+  reasoning: text("reasoning"), // AI explanation for the suggestions
+  status: text("status").default("ACTIVE").notNull(), // ACTIVE, COMPLETED, PAUSED
+  progress: integer("progress").default(0), // Overall progress percentage
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
@@ -209,6 +224,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   createdInvites: many(invites),
   certificates: many(certificates),
   scenarioAttempts: many(scenarioAttempts),
+  learningPaths: many(learningPaths),
 }));
 
 export const aiTutorsRelations = relations(aiTutors, ({ many }) => ({
@@ -323,6 +339,13 @@ export const userProgressRelations = relations(userProgress, ({ one }) => ({
   }),
 }));
 
+export const learningPathsRelations = relations(learningPaths, ({ one }) => ({
+  user: one(users, {
+    fields: [learningPaths.userId],
+    references: [users.id],
+  }),
+}));
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -352,6 +375,12 @@ export const insertScenarioAttemptSchema = createInsertSchema(scenarioAttempts).
 });
 
 export const insertClientSchema = createInsertSchema(clients).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertLearningPathSchema = createInsertSchema(learningPaths).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
@@ -414,3 +443,5 @@ export type ScenarioAttempt = typeof scenarioAttempts.$inferSelect;
 export type InsertScenarioAttempt = z.infer<typeof insertScenarioAttemptSchema>;
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
+export type LearningPath = typeof learningPaths.$inferSelect;
+export type InsertLearningPath = z.infer<typeof insertLearningPathSchema>;

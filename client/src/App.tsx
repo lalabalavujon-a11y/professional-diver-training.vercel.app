@@ -24,7 +24,7 @@ import Invite from "@/pages/invite";
 import SignIn from "@/pages/signin";
 import DemoUsers from "@/pages/demo-users";
 import ProfileSettings from "@/pages/profile-settings";
-import LearningPathSuggestions from "@/pages/learning-path-suggestions";
+import LearningPath from "@/pages/learning-path";
 import ChatLaura from "@/pages/chat-laura";
 import Operations from "@/pages/operations";
 import Tracks from "@/pages/tracks";
@@ -54,7 +54,7 @@ function Router() {
       <Route path="/signin" component={SignIn} />
       <Route path="/demo-users" component={DemoUsers} />
       <Route path="/profile-settings" component={ProfileSettings} />
-      <Route path="/learning-path" component={LearningPathSuggestions} />
+      <Route path="/learning-path" component={LearningPath} />
       <Route path="/chat/laura" component={ChatLaura} />
       <Route path="/operations" component={Operations} />
       <Route path="/tracks" component={Tracks} />

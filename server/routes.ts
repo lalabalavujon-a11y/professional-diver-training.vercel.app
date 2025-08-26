@@ -6,7 +6,7 @@ import { emailMarketing } from "./email-marketing";
 import { affiliateService } from "./affiliate-service";
 import { registerImportRoutes } from "./routes/import-content";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
-import { aiLearningPathService } from "./ai-learning-path-service";
+import { AILearningPathService } from "./ai-learning-path";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 
@@ -456,6 +456,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Affiliate creation error:', error);
       res.status(500).json({ error: 'Failed to create affiliate account' });
+    }
+  });
+
+  // Learning Path AI Routes
+  app.post('/api/learning-path/generate', async (req, res) => {
+    try {
+      const { profile, additionalInfo } = req.body;
+      
+      if (!profile || !profile.experience || !profile.goals || profile.goals.length === 0) {
+        return res.status(400).json({ error: 'Profile with experience and goals is required' });
+      }
+
+      const aiLearningPathService = new AILearningPathService();
+      const suggestions = await aiLearningPathService.generateLearningPath(profile, additionalInfo);
+      
+      res.json({ suggestions });
+    } catch (error) {
+      console.error('Learning path generation error:', error);
+      res.status(500).json({ error: 'Failed to generate learning path suggestions' });
+    }
+  });
+
+  app.get('/api/learning-path/suggestions', async (req, res) => {
+    try {
+      // For the demo, return mock suggestions based on query parameters
+      const { experience, goals } = req.query;
+      
+      if (!experience || !goals) {
+        return res.json([]);
+      }
+
+      // Return sample suggestions for now
+      const mockSuggestions = [
+        {
+          id: "foundation-path",
+          title: "Commercial Diving Foundation",
+          description: "Essential certifications for starting your commercial diving career",
+          difficulty: "Beginner",
+          estimatedWeeks: 16,
+          tracks: [
+            {
+              id: "1",
+              title: "Air Diving Life Support Technician (ALST)",
+              slug: "air-diving-life-support-technician",
+              order: 1,
+              reason: "Foundation certification required for all commercial diving operations"
+            },
+            {
+              id: "2", 
+              title: "Life Support Technician (LST)",
+              slug: "life-support-technician",
+              order: 2,
+              reason: "Advanced life support systems management and safety protocols"
+            }
+          ],
+          confidence: 92,
+          reasoning: "Based on your beginner experience level and commercial diving goals, this path provides the essential foundation certifications required by industry standards."
+        }
+      ];
+      
+      res.json(mockSuggestions);
+    } catch (error) {
+      console.error('Learning path suggestions error:', error);
+      res.status(500).json({ error: 'Failed to fetch learning path suggestions' });
     }
   });
 

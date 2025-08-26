@@ -30,6 +30,8 @@ The database schema supports a comprehensive learning management system:
 - **Quizzes**: Assessments with multiple-choice questions
 - **Progress Tracking**: User completion status and quiz attempts
 - **Invites**: Token-based user invitation system
+- **AI Tutors**: Specialized AI tutors for each diving track (DMT, ALST, LST, NDT, Commercial Dive Supervisor, SSED, SAT)
+- **Learning Paths**: AI-powered personalized learning recommendations based on user profiles and goals
 
 ## Authentication Strategy
 - **NextAuth.js Ready**: Infrastructure prepared for session-based authentication
