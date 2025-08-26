@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Clock, Users, BookOpen, Award, CheckCircle, ArrowRight, Brain } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
 
@@ -112,6 +112,7 @@ const levelColors: { [key: string]: string } = {
 };
 
 export default function Tracks() {
+  const [, setLocation] = useLocation();
   const { data: apiTracks, isLoading } = useQuery<Track[]>({
     queryKey: ["/api/tracks"],
   });
@@ -271,21 +272,23 @@ export default function Tracks() {
                   </div>
 
                   {/* Action Button */}
-                  <Link href={`/tracks/${track.slug}`}>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700" data-testid={`button-start-track-${track.id}`}>
-                      {track.progress > 0 ? (
-                        <>
-                          Continue Track
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </>
-                      ) : (
-                        <>
-                          Start Track
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </>
-                      )}
-                    </Button>
-                  </Link>
+                  <Button 
+                    onClick={() => setLocation(`/tracks/${track.slug}`)}
+                    className="w-full bg-blue-600 hover:bg-blue-700" 
+                    data-testid={`button-start-track-${track.id}`}
+                  >
+                    {track.progress > 0 ? (
+                      <>
+                        Continue Track
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    ) : (
+                      <>
+                        Start Track
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
