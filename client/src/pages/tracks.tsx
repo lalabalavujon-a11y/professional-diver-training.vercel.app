@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Users, BookOpen, Award, CheckCircle, ArrowRight } from "lucide-react";
+import { Clock, Users, BookOpen, Award, CheckCircle, ArrowRight, Brain } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
@@ -14,6 +14,12 @@ interface Track {
   summary: string | null;
   isPublished: boolean;
   createdAt: string;
+  aiTutor: {
+    id: string;
+    name: string;
+    specialty: string;
+    description: string;
+  } | null;
 }
 
 // Mock data for tracks
@@ -123,7 +129,8 @@ export default function Tracks() {
       students: Math.floor(Math.random() * 2000) + 500,
       progress: Math.floor(Math.random() * 100),
       completed: false,
-      category: "Professional Training"
+      category: "Professional Training",
+      aiTutor: track.aiTutor
     })) : mockTracks;
 
   return (
@@ -221,6 +228,19 @@ export default function Tracks() {
                 <CardDescription className="text-sm text-slate-600">
                   {track.description}
                 </CardDescription>
+                
+                {/* AI Tutor Information for API tracks */}
+                {track.aiTutor && (
+                  <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Brain className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm font-medium text-blue-900">AI Tutor</span>
+                    </div>
+                    <p className="text-sm text-blue-800">
+                      {track.aiTutor.description}
+                    </p>
+                  </div>
+                )}
               </CardHeader>
               
               <CardContent>

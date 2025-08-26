@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { tracks, lessons, quizzes, questions, invites, clients, users } from "@shared/schema";
+import { tracks, lessons, quizzes, questions, invites, clients, users, aiTutors } from "@shared/schema";
 import { eq, sql } from "drizzle-orm";
 
 // Temporary storage class that works with current database structure
@@ -13,7 +13,16 @@ export class TempDatabaseStorage {
         summary: tracks.summary,
         isPublished: tracks.isPublished,
         createdAt: tracks.createdAt,
-      }).from(tracks).where(eq(tracks.isPublished, true)).orderBy(tracks.title);
+        aiTutor: {
+          id: aiTutors.id,
+          name: aiTutors.name,
+          specialty: aiTutors.specialty,
+          description: aiTutors.description,
+        }
+      }).from(tracks)
+        .leftJoin(aiTutors, eq(tracks.aiTutorId, aiTutors.id))
+        .where(eq(tracks.isPublished, true))
+        .orderBy(tracks.title);
       return result;
     } catch (error) {
       console.error('Error fetching tracks:', error);
@@ -30,7 +39,15 @@ export class TempDatabaseStorage {
         summary: tracks.summary,
         isPublished: tracks.isPublished,
         createdAt: tracks.createdAt,
-      }).from(tracks).where(eq(tracks.slug, slug));
+        aiTutor: {
+          id: aiTutors.id,
+          name: aiTutors.name,
+          specialty: aiTutors.specialty,
+          description: aiTutors.description,
+        }
+      }).from(tracks)
+        .leftJoin(aiTutors, eq(tracks.aiTutorId, aiTutors.id))
+        .where(eq(tracks.slug, slug));
       
       if (!track) return undefined;
 
