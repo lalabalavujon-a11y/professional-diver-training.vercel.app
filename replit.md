@@ -1,6 +1,6 @@
 # Overview
 
-This is a professional diving education platform built with React, Express, and Drizzle ORM. The application provides structured learning tracks for diving professionals, covering topics like diving physiology, decompression theory, and advanced techniques. The platform features a comprehensive course management system with lessons, quizzes, user progress tracking, and admin functionality for managing invites and content.
+This is a professional diving exam preparation platform built with React, Express, and Drizzle ORM. The application provides comprehensive practice tests and study materials to help divers prepare for certification exams at certified diving schools. The platform features professional-grade mock exams, AI-powered explanations, voice dictation technology, and performance analytics to help users ace their commercial diving certification exams.
 
 # User Preferences
 

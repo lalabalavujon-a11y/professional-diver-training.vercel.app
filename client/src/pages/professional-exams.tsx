@@ -30,7 +30,7 @@ const professionalExamTracks: ExamTrack[] = [
     id: "ndt-inspection",
     title: "NDT Inspection & Testing",
     slug: "ndt-inspection",
-    description: "Comprehensive visual inspection, magnetic particle testing, and ultrasonic testing certification",
+    description: "Practice visual inspection, magnetic particle testing, and ultrasonic testing exam preparation",
     questionsCount: 75,
     timeLimit: 120,
     passingScore: 80,
@@ -45,7 +45,7 @@ const professionalExamTracks: ExamTrack[] = [
     id: "diver-medic",
     title: "Diver Medic Technician",
     slug: "diver-medic",
-    description: "Emergency medical response, ABCDE assessment, and diving injury treatment protocols",
+    description: "Practice emergency medical response, ABCDE assessment, and diving injury treatment exam prep",
     questionsCount: 65,
     timeLimit: 90,
     passingScore: 85,
@@ -60,7 +60,7 @@ const professionalExamTracks: ExamTrack[] = [
     id: "commercial-supervisor",
     title: "Commercial Dive Supervisor",
     slug: "commercial-supervisor",
-    description: "Dive operations management, safety protocols, and emergency response leadership",
+    description: "Practice dive operations management, safety protocols, and emergency response exam prep",
     questionsCount: 80,
     timeLimit: 150,
     passingScore: 80,
@@ -161,10 +161,10 @@ export default function ProfessionalExams() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2" data-testid="text-exams-title">
-            Professional Diving Certification Exams
+            Professional Diving Exam Preparation
           </h1>
           <p className="text-lg text-slate-600">
-            Comprehensive timed assessments with multiple choice, written responses, and voice dictation
+            Practice tests and study materials to prepare for certification exams at certified diving schools
           </p>
         </div>
 
@@ -254,7 +254,7 @@ export default function ProfessionalExams() {
                 {exam.completed && (
                   <div className="flex items-center text-green-600 text-sm font-medium">
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    Certified
+                    Practice Complete
                   </div>
                 )}
               </CardHeader>
@@ -304,7 +304,7 @@ export default function ProfessionalExams() {
                         data-testid={`button-start-exam-${exam.slug}`}
                       >
                         <Play className="w-4 h-4 mr-2" />
-                        {exam.attempts === 0 ? 'Start Exam' : 'Retake Exam'}
+                        {exam.attempts === 0 ? 'Start Practice Test' : 'Retake Practice Test'}
                       </Button>
                     </Link>
                   )}
@@ -330,7 +330,7 @@ export default function ProfessionalExams() {
         {/* Features Highlight */}
         <Card className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border-0">
           <CardContent className="pt-6">
-            <h3 className="text-xl font-semibold text-slate-900 mb-4">Professional Exam Features</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mb-4">Professional Exam Preparation Features</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex items-start space-x-3">
                 <Brain className="w-6 h-6 text-blue-600 mt-1" />
@@ -350,7 +350,7 @@ export default function ProfessionalExams() {
                 <Clock className="w-6 h-6 text-green-600 mt-1" />
                 <div>
                   <h4 className="font-medium text-slate-900">Timed Assessments</h4>
-                  <p className="text-sm text-slate-600">Authentic exam conditions with performance analytics</p>
+                  <p className="text-sm text-slate-600">Authentic practice test conditions with performance analytics</p>
                 </div>
               </div>
             </div>

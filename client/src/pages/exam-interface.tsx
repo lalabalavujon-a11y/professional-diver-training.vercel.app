@@ -161,9 +161,9 @@ export default function ExamInterface() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-bold text-slate-900" data-testid="text-exam-title">
-                Professional NDT Inspection Certification
+                NDT Inspection Practice Test
               </h1>
-              <p className="text-slate-600">Advanced Commercial Diving Assessment</p>
+              <p className="text-slate-600">Prepare for Commercial Diving Certification Exams</p>
             </div>
             <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-mono text-lg font-bold ${
               timeIsLow ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
@@ -320,7 +320,7 @@ export default function ExamInterface() {
                       className="bg-green-600 hover:bg-green-700 text-white"
                       data-testid="button-submit-exam"
                     >
-                      Submit Exam
+                      Complete Practice Test
                     </Button>
                   ) : (
                     <Button
@@ -340,11 +340,11 @@ export default function ExamInterface() {
           <div className="space-y-6">
             <Card className="bg-green-50 border-green-200">
               <CardHeader>
-                <CardTitle className="text-green-800">Exam Submitted Successfully</CardTitle>
+                <CardTitle className="text-green-800">Practice Test Completed Successfully</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-green-700">
-                  Your exam has been submitted and is being processed. Results will be available shortly.
+                  Your practice test has been completed. Review the detailed explanations below to prepare for your certification exam.
                 </p>
               </CardContent>
             </Card>

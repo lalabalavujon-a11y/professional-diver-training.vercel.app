@@ -37,11 +37,11 @@ export default function Landing() {
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6">
               Master Commercial Diving 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800"> Certification</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800"> Certification Exams</span>
             </h1>
             <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-              Professional diving education platform with comprehensive training tracks, AI-powered tutors, 
-              timed mock exams, and adaptive spaced repetition learning for all commercial diving levels.
+              Professional diving exam preparation platform with comprehensive practice tests, AI-powered tutors, 
+              timed mock exams, and adaptive learning to ace your certification exams at certified diving schools.
             </p>
             
             {/* CTA Buttons */}
@@ -67,10 +67,10 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-slate-900 mb-4">
-              Complete Professional Diving Education
+              Complete Professional Diving Exam Preparation
             </h2>
             <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              From NDT inspection to emergency medical response, master all aspects of commercial diving with our comprehensive training platform.
+              From NDT inspection to emergency medical response, prepare for all commercial diving certification exams with our comprehensive practice platform.
             </p>
           </div>
 
@@ -85,7 +85,7 @@ export default function Landing() {
               </CardHeader>
               <CardContent>
                 <p className="text-slate-600">
-                  Professional written examinations with voice-to-text dictation. Practice essay questions with authentic exam conditions.
+                  Practice professional written examinations with voice-to-text dictation. Master essay questions with authentic exam conditions.
                 </p>
               </CardContent>
             </Card>
@@ -99,7 +99,7 @@ export default function Landing() {
               </CardHeader>
               <CardContent>
                 <p className="text-slate-600">
-                  Authentic timed assessments for all commercial diving levels with performance analytics and adaptive learning.
+                  Practice with authentic timed mock exams for all commercial diving levels with performance analytics and adaptive learning.
                 </p>
               </CardContent>
             </Card>
@@ -113,7 +113,7 @@ export default function Landing() {
               </CardHeader>
               <CardContent>
                 <p className="text-slate-600">
-                  Instant detailed explanations with AI tutors plus spaced repetition algorithm for effective knowledge retention.
+                  Instant detailed explanations with AI tutors plus spaced repetition algorithm for effective exam preparation and knowledge retention.
                 </p>
               </CardContent>
             </Card>
@@ -284,7 +284,7 @@ export default function Landing() {
       <section className="px-4 sm:px-6 lg:px-8 py-12 bg-white border-t border-slate-200">
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-xl font-semibold text-slate-900 mb-4">Already Purchased?</h3>
-          <p className="text-slate-600 mb-6">Access your study dashboard and continue your certification journey</p>
+          <p className="text-slate-600 mb-6">Access your study dashboard and continue your exam preparation journey</p>
           <Link href="/login">
             <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50" data-testid="button-login-existing">
               <ChevronRight className="w-4 h-4 mr-2" />
