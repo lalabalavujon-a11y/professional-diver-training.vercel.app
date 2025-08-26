@@ -54,7 +54,7 @@ export default function TrackDetail() {
       
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
-          <Link href="/">
+          <Link href="/tracks">
             <Button variant="ghost" className="mb-4" data-testid="button-back">
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back to Tracks

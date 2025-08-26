@@ -61,7 +61,7 @@ export default function LessonDetail() {
           <div className="border-b border-gray-200 px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <Link href="/">
+                <Link href="/tracks">
                   <button className="text-slate-500 hover:text-slate-700" data-testid="button-back">
                     <ChevronLeft className="w-5 h-5" />
                   </button>

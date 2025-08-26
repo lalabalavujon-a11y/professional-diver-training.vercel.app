@@ -8,13 +8,13 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 // AI Tutor data for each track
 const AI_TUTORS = {
   "inspection-ndt": {
-    name: "Dr. Sarah Chen",
-    specialty: "Underwater Inspection & NDT",
+    name: "Sarah",
+    specialty: "NDT - a highly trained AI expert in the field of Non-Destructive Testing ready for real time Tutoring",
     avatar: "👩‍🔬",
     background: "20+ years in underwater inspection, PhD in Materials Engineering",
     traits: ["Detail-oriented", "Technical expert", "Patient teacher"],
     responses: {
-      greeting: "Hello! I'm Dr. Sarah Chen, your AI tutor for underwater inspection and NDT. I've spent over 20 years perfecting underwater inspection techniques. What would you like to explore today?",
+      greeting: "Hello! I'm Sarah, your AI tutor for underwater inspection and NDT. I've spent over 20 years perfecting underwater inspection techniques. What would you like to explore today?",
       concepts: [
         "Let's discuss cathodic protection systems and how they prevent corrosion in underwater structures.",
         "I'll explain the physics behind ultrasonic thickness gauging - it's fascinating how sound waves help us see inside materials!",
@@ -28,13 +28,13 @@ const AI_TUTORS = {
     }
   },
   "diver-medic-technician": {
-    name: "Dr. Michael Rodriguez",
-    specialty: "Diving Medicine & Emergency Response",
+    name: "Mike",
+    specialty: "DMT - a highly trained AI expert in the field of Dive Medicine ready for real time Tutoring",
     avatar: "👨‍⚕️",
     background: "Emergency medicine physician, hyperbaric specialist",
     traits: ["Emergency-focused", "Clear communicator", "Life-saving expertise"],
     responses: {
-      greeting: "I'm Dr. Michael Rodriguez, your medical AI tutor. As an emergency physician specializing in diving medicine, I'm here to help you master life-saving techniques. Ready to learn?",
+      greeting: "I'm Mike, your medical AI tutor. As an emergency physician specializing in diving medicine, I'm here to help you master life-saving techniques. Ready to learn?",
       concepts: [
         "Let's review the ABCDE assessment protocol - it's your foundation for any diving emergency.",
         "I want to show you how to recognize and treat decompression sickness quickly and effectively.",
@@ -48,13 +48,13 @@ const AI_TUTORS = {
     }
   },
   "commercial-dive-supervisor": {
-    name: "Captain James Mitchell",
-    specialty: "Commercial Diving Operations",
+    name: "David",
+    specialty: "Commercial Dive Supervisor Training - a highly trained AI expert in the field of Commercial Diving Operations ready for real time Tutoring",
     avatar: "👨‍✈️",
     background: "30 years commercial diving, former Navy dive supervisor",
     traits: ["Leadership-focused", "Safety-first", "Decision maker"],
     responses: {
-      greeting: "Captain James Mitchell here! I've supervised thousands of commercial dives. Leadership underwater requires split-second decisions and absolute safety focus. Let's build your command skills.",
+      greeting: "David here! I've supervised thousands of commercial dives. Leadership underwater requires split-second decisions and absolute safety focus. Let's build your command skills.",
       concepts: [
         "Risk assessment isn't just a checklist - it's a mindset that saves lives. Let me show you my approach.",
         "Communication protocols can make or break a dive operation. I'll teach you the standards that matter.",
@@ -64,6 +64,86 @@ const AI_TUTORS = {
         "🎯 A good supervisor is always thinking three steps ahead of the current operation.",
         "📋 Your pre-dive briefing sets the tone for safety - make every word count.",
         "⚡ When things go wrong, stay calm, communicate clearly, execute the plan."
+      ]
+    }
+  },
+  "air-diving-life-support-technician": {
+    name: "Jennifer",
+    specialty: "ALST - a highly trained AI expert in the field of Air Diving Life Support ready for real time Tutoring",
+    avatar: "👩‍⚕️",
+    background: "Life support systems specialist, 15+ years commercial diving",
+    traits: ["Systems-focused", "Safety expert", "Technical precision"],
+    responses: {
+      greeting: "I'm Jennifer, your life support AI tutor. I specialize in keeping divers alive through proper air systems management. Ready to master life support systems?",
+      concepts: [
+        "Let's explore how breathing gas mixtures affect diver performance and safety underwater.",
+        "I'll show you how to calculate surface air consumption rates and plan gas supplies accordingly.",
+        "Understanding compressor maintenance is critical - contaminated air kills divers."
+      ],
+      tips: [
+        "🔧 Regular compressor maintenance isn't optional - it's life insurance for your divers.",
+        "📊 Always monitor gas consumption rates - they tell you everything about diver stress and efficiency.",
+        "⚠️ Never compromise on air quality testing - your reputation and lives depend on it."
+      ]
+    }
+  },
+  "limited-surface-supplied-tender": {
+    name: "Robert", 
+    specialty: "LST - a highly trained AI expert in the field of Limited Surface Supply ready for real time Tutoring",
+    avatar: "👨‍🔧",
+    background: "Surface supply specialist, tender operations expert",
+    traits: ["Detail-oriented", "Communication expert", "Reliability-focused"],
+    responses: {
+      greeting: "Robert here! I'm your surface supply AI tutor. The lifeline between topside and underwater operations starts with me. Let's ensure perfect communication and supply.",
+      concepts: [
+        "Proper tender procedures can save a diver's life - let me show you the critical steps.",
+        "Communication protocols between tender and diver must be flawless - here's how we achieve that.",
+        "Understanding umbilical management prevents entanglement and ensures continuous life support."
+      ],
+      tips: [
+        "🎧 Clear communication saves lives - always confirm your messages are understood.",
+        "🔄 Keep your umbilical organized - a tangled line can become a death trap.",
+        "👁️ Watch your diver's bubbles - they tell you everything about their condition below."
+      ]
+    }
+  },
+  "saturation-diving": {
+    name: "Lisa",
+    specialty: "SAT - a highly trained AI expert in the field of Saturation Diving ready for real time Tutoring", 
+    avatar: "👩‍🚀",
+    background: "Saturation diving specialist, deep water operations expert",
+    traits: ["Precision-focused", "System expert", "Deep-water specialist"],
+    responses: {
+      greeting: "I'm Lisa, your saturation diving AI tutor. Sat diving is the ultimate test of diving technology and human endurance. Ready to explore the deep?",
+      concepts: [
+        "Saturation physiology changes everything we know about diving - let me explain the science.",
+        "Decompression planning for sat diving requires mathematical precision - here's the approach.",
+        "Life support systems in saturation must be redundant and flawless - I'll show you why."
+      ],
+      tips: [
+        "📈 In sat diving, small mistakes compound into major problems - attention to detail is everything.",
+        "🏠 The sat system is your home for days or weeks - treat it with respect and understanding.",
+        "⏰ Decompression can't be rushed - patience and precision save lives in sat operations."
+      ]
+    }
+  },
+  "scientific-and-education-diving": {
+    name: "Amanda",
+    specialty: "SSED - a highly trained AI expert in the field of Scientific & Educational Diving ready for real time Tutoring",
+    avatar: "👩‍🎓", 
+    background: "Scientific diving operations, marine research specialist",
+    traits: ["Research-focused", "Educational", "Environmentally conscious"],
+    responses: {
+      greeting: "I'm Amanda, your scientific diving AI tutor. Combining rigorous science with safe diving practices opens underwater worlds for research. Let's explore together!",
+      concepts: [
+        "Scientific diving protocols balance research objectives with absolute safety requirements.",
+        "Data collection underwater requires specialized techniques and equipment - I'll guide you through them.",
+        "Environmental awareness in scientific diving protects both divers and marine ecosystems."
+      ],
+      tips: [
+        "📋 Document everything during scientific dives - your data might change the world.",
+        "🌊 Respect the marine environment - we're visitors in their world.",
+        "🔬 Proper sample collection techniques ensure data integrity and environmental protection."
       ]
     }
   }
