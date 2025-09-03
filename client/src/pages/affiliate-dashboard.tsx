@@ -20,18 +20,39 @@ import { Link } from "wouter";
 import Footer from "@/components/footer";
 import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
 
+interface DashboardData {
+  stats: {
+    totalEarnings: number;
+    monthlyEarnings: number;
+    totalReferrals: number;
+    conversionRate: number;
+    monthlyReferrals: number;
+    totalClicks: number;
+    totalConversions: number;
+    averageOrderValue: number;
+  };
+  affiliate: {
+    referralLink: string;
+    name: string;
+    email: string;
+    affiliateCode: string;
+  };
+  recentReferrals: any[];
+  recentClicks: any[];
+}
+
 export default function AffiliateDashboard() {
   const [copiedLink, setCopiedLink] = useState(false);
   const { toast } = useToast();
 
   // Fetch affiliate dashboard data
-  const { data: dashboardData, isLoading } = useQuery({
+  const { data: dashboardData, isLoading } = useQuery<DashboardData>({
     queryKey: ['/api/affiliate/dashboard'],
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
   // Fetch affiliate leaderboard
-  const { data: leaderboard } = useQuery({
+  const { data: leaderboard } = useQuery<any[]>({
     queryKey: ['/api/affiliate/leaderboard'],
     refetchInterval: 60000, // Refresh every minute
   });

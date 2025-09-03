@@ -7,9 +7,24 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { AlertCircle, Clock } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import type { Quiz, Question } from "@shared/schema";
 
-type QuizWithQuestions = Quiz & { questions: Question[] };
+type Question = {
+  id: string;
+  prompt: string;
+  a: string;
+  b: string;
+  c: string;
+  d: string;
+  answer: string;
+  order: number;
+};
+
+type QuizWithQuestions = {
+  id: string;
+  title: string;
+  timeLimit: number;
+  questions: Question[];
+};
 
 export default function Quiz() {
   const [, params] = useRoute("/lessons/:id/quiz");
@@ -25,13 +40,15 @@ export default function Quiz() {
   const { data: quiz, isLoading } = useQuery<QuizWithQuestions>({
     queryKey: ["/api/quizzes/lesson", params?.id],
     enabled: !!params?.id,
-    onSuccess: (data) => {
-      if (data && !quizStarted && timeRemaining === null) {
-        const timeLimit = data.timeLimit || 30; // Default 30 minutes
-        setTimeRemaining(timeLimit * 60); // Convert to seconds
-      }
-    },
   });
+
+  // Initialize timer when quiz data is loaded
+  useEffect(() => {
+    if (quiz && !quizStarted && timeRemaining === null) {
+      const timeLimit = quiz.timeLimit || 30; // Default 30 minutes
+      setTimeRemaining(timeLimit * 60); // Convert to seconds
+    }
+  }, [quiz, quizStarted, timeRemaining]);
 
   const submitAttemptMutation = useMutation({
     mutationFn: async (attemptData: any) => {
@@ -221,7 +238,7 @@ export default function Quiz() {
               <div className="text-right">
                 <div className="text-sm text-slate-500">Time Remaining</div>
                 <div className="text-lg font-mono font-semibold text-slate-900" data-testid="text-time-remaining">
-                  {formatTime(timeRemaining)}
+                  {formatTime(timeRemaining || 0)}
                 </div>
               </div>
             </div>

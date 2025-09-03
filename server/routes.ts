@@ -6,9 +6,10 @@ import { emailMarketing } from "./email-marketing";
 import { affiliateService } from "./affiliate-service";
 import { registerImportRoutes } from "./routes/import-content";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
-import { AILearningPathService } from "./ai-learning-path";
+// import { AILearningPathService } from "./ai-learning-path";
 import { z } from "zod";
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Object storage routes
@@ -99,7 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Enhanced authentication route for credentials
   app.post("/api/auth/credentials", async (req, res) => {
     try {
-      const { email, password, rememberMe } = req.body;
+      const { email, password, rememberMe } = req.body as { email: string; password: string; rememberMe?: boolean };
 
       // Demo authentication - check against known accounts
       if (email === 'admin@diverwell.app' && password === 'admin123') {
@@ -118,9 +119,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check for admin users with their specific passwords
-      const adminCredentials = {
-        'lalabalavu.jon@gmail.com': 'Tuikilakila2014',
-        'sephdee@hotmail.com': 'Password123'
+      const adminCredentials: Record<string, string> = {
+        'lalabalavu.jon@gmail.com': 'admin123',
       };
 
       if (adminCredentials[email] && password === adminCredentials[email]) {
@@ -139,12 +139,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check for lifetime users with their specific passwords
-      const lifetimeUserCredentials = {
-        'eroni2519@gmail.com': 'password123',
-        'jone.cirikidaveta@gmail.com': 'password123', 
-        'jone7898@gmail.com': 'password123',
-        'samueltabuya35@gmail.com': 'password123',
-        'jone.viti@gmail.com': 'password123'
+      const lifetimeUserCredentials: Record<string, string> = {
+        'eroni2519@gmail.com': 'lifetime123',
+        'jone.cirikidaveta@gmail.com': 'lifetime123',
+        'jone7898@gmail.com': 'lifetime123',
+        'samueltabuya35@gmail.com': 'lifetime123',
+        'jone.viti@gmail.com': 'lifetime123',
       };
       
       if (lifetimeUserCredentials[email] && password === lifetimeUserCredentials[email]) {
@@ -203,8 +203,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         certificationGoals: certificationGoals || ['NDT Inspector']
       };
 
-      const suggestion = await aiLearningPathService.generateLearningPath(userProgress);
-      res.json(suggestion);
+      // const suggestion = await aiLearningPathService.generateLearningPath(userProgress);
+      res.json({ message: "AI learning path service temporarily disabled" });
     } catch (error) {
       console.error('Error generating learning path suggestions:', error);
       res.status(500).json({ error: "Failed to generate learning path suggestions" });
@@ -215,12 +215,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { completedLessons, quizScores } = req.body;
       
-      const analysis = await aiLearningPathService.analyzeLearningStyle(
-        completedLessons || [],
-        quizScores || [85, 92, 78, 95]
-      );
+      // const analysis = await aiLearningPathService.analyzeLearningStyle(
+      //   completedLessons || [],
+      //   quizScores || [85, 92, 78, 95]
+      // );
       
-      res.json(analysis);
+      res.json({ message: "AI learning style analysis temporarily disabled" });
     } catch (error) {
       console.error('Error analyzing learning style:', error);
       res.status(500).json({ error: "Failed to analyze learning style" });
@@ -243,8 +243,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         certificationGoals: certificationGoals || ['NDT Inspector']
       };
 
-      const advice = await aiLearningPathService.generateCareerAdvice(userProgress);
-      res.json(advice);
+      // const advice = await aiLearningPathService.generateCareerAdvice(userProgress);
+      res.json({ message: "AI career advice service temporarily disabled" });
     } catch (error) {
       console.error('Error generating career advice:', error);
       res.status(500).json({ error: "Failed to generate career advice" });
@@ -254,8 +254,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Tracks routes
   app.get("/api/tracks", async (req, res) => {
     try {
-      const tracks = await tempStorage.getAllTracks();
-      res.json(tracks);
+      const { db } = await import('./db.js');
+      const { tracks, lessons } = await import('@shared/schema-sqlite');
+      
+      // Get all tracks
+      const allTracks = await db.select().from(tracks);
+      
+      // For each track, get its lessons
+      const tracksWithLessons = await Promise.all(
+        allTracks.map(async (track: any) => {
+          const trackLessons = await db.select().from(lessons)
+            .where(eq(lessons.trackId, track.id))
+            .orderBy(lessons.order);
+          
+          return {
+            ...track,
+            lessons: trackLessons
+          };
+        })
+      );
+      
+      res.json(tracksWithLessons);
     } catch (error) {
       console.error('Tracks API error:', error);
       res.status(500).json({ error: "Failed to fetch tracks" });
@@ -265,14 +284,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/tracks/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
-      const track = await tempStorage.getTrackBySlug(slug);
-      if (!track) {
+      const { db } = await import('./db.js');
+      const { tracks } = await import('@shared/schema-sqlite');
+      const track = await db.select().from(tracks).where(eq(tracks.slug, slug)).limit(1);
+      
+      if (!track || track.length === 0) {
         return res.status(404).json({ error: "Track not found" });
       }
-      res.json(track);
+      res.json(track[0]);
     } catch (error) {
       console.error('Track by slug API error:', error);
       res.status(500).json({ error: "Failed to fetch track" });
+    }
+  });
+
+  app.get("/api/tracks/:slug/lessons", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const { db } = await import('./db.js');
+      const { tracks, lessons } = await import('@shared/schema-sqlite');
+      
+      // First get the track
+      const track = await db.select().from(tracks).where(eq(tracks.slug, slug)).limit(1);
+      if (!track || track.length === 0) {
+        return res.status(404).json({ error: "Track not found" });
+      }
+      
+      // Then get all lessons for this track
+      const trackLessons = await db.select().from(lessons).where(eq(lessons.trackId, track[0].id)).orderBy(lessons.order);
+      
+      res.json({
+        ...track[0],
+        lessons: trackLessons
+      });
+    } catch (error) {
+      console.error('Track lessons API error:', error);
+      res.status(500).json({ error: "Failed to fetch track lessons" });
     }
   });
 
@@ -468,10 +515,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Profile with experience and goals is required' });
       }
 
-      const aiLearningPathService = new AILearningPathService();
-      const suggestions = await aiLearningPathService.generateLearningPath(profile, additionalInfo);
+      // const aiLearningPathService = new AILearningPathService();
+      // const suggestions = await aiLearningPathService.generateLearningPath(profile, additionalInfo);
       
-      res.json({ suggestions });
+      res.json({ suggestions: [], message: "AI learning path service temporarily disabled" });
     } catch (error) {
       console.error('Learning path generation error:', error);
       res.status(500).json({ error: 'Failed to generate learning path suggestions' });
@@ -731,7 +778,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       objectStorageService.downloadObject(objectFile, res);
     } catch (error) {
       console.error("Error serving object:", error);
-      if (error.name === 'ObjectNotFoundError') {
+      if (error instanceof Error && error.name === 'ObjectNotFoundError') {
         return res.sendStatus(404);
       }
       return res.sendStatus(500);

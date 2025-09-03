@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { tracks, lessons, quizzes, questions, invites, clients, users, aiTutors } from "@shared/schema";
+import { tracks, lessons, quizzes, questions, invites, clients, users, aiTutors } from "@shared/schema-sqlite";
 import { eq, sql } from "drizzle-orm";
 
 // Temporary storage class that works with current database structure

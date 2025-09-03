@@ -58,13 +58,19 @@ export default function LearningPath() {
 
   const generateSuggestionsMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest("/api/learning-path/generate", {
-        method: "POST",
-        body: JSON.stringify({
-          profile: userProfile,
-          additionalInfo
-        })
-      });
+      return await apiRequest(
+        "POST",
+        "/api/learning-path/generate",
+        {
+          userId: "current-user",
+          preferences: {
+            interests: userProfile.interests,
+            experienceLevel: userProfile.experience,
+            timeAvailable: userProfile.timeCommitment,
+            learningStyle: "adaptive", // Placeholder, can be adjusted
+          },
+        }
+      );
     },
     onSuccess: () => {
       setShowSuggestions(true);

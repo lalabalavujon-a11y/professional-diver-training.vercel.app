@@ -1,5 +1,5 @@
 import { db } from '../server/db.js';
-import { tracks, lessons, quizzes, questions } from '../shared/schema.js';
+import { tracks, lessons, quizzes, questions } from '../shared/schema-sqlite.js';
 
 async function workingSeed() {
   console.log('🌱 Seeding comprehensive professional diving education content...');
@@ -510,31 +510,37 @@ This comprehensive ABCDE training with AI tutoring ensures systematic, professio
     {
       quizId: ndtAssessment.id,
       prompt: "In professional commercial underwater inspection operations, what is the primary advantage of systematic grid pattern inspection methodology?",
-      a: "Reduces total inspection time and operational costs significantly",
-      b: "Ensures complete systematic coverage with quality assurance verification and eliminates missed critical structural areas",
-      c: "Minimizes specialized lighting and equipment requirements for operations",
-      d: "Reduces diver physical exertion and gas consumption rates during work",
-      answer: "b",
+      options: JSON.stringify({
+        a: "Reduces total inspection time and operational costs significantly",
+        b: "Ensures complete systematic coverage with quality assurance verification and eliminates missed critical structural areas",
+        c: "Minimizes specialized lighting and equipment requirements for operations",
+        d: "Reduces diver physical exertion and gas consumption rates during work"
+      }),
+      correctAnswer: "b",
       order: 1,
     },
     {
       quizId: ndtAssessment.id,
       prompt: "Which corrosion type is most commonly associated with dissimilar metal connections in marine environments and requires electrochemical galvanic series analysis for assessment?",
-      a: "General uniform corrosion across large surface areas of structures",
-      b: "Localized pitting corrosion with high depth-to-diameter ratios",
-      c: "Galvanic corrosion with preferential anode attack at connection points and interfaces",
-      d: "Crevice corrosion in confined joint spaces and under marine growth deposits",
-      answer: "c", 
+      options: JSON.stringify({
+        a: "General uniform corrosion across large surface areas of structures",
+        b: "Localized pitting corrosion with high depth-to-diameter ratios",
+        c: "Galvanic corrosion with preferential anode attack at connection points and interfaces",
+        d: "Crevice corrosion in confined joint spaces and under marine growth deposits"
+      }),
+      correctAnswer: "c", 
       order: 2,
     },
     {
       quizId: ndtAssessment.id,
       prompt: "According to NACE industry standards for cathodic protection, what is the minimum protection potential for steel structures in seawater using Silver/Silver Chloride reference electrode?",
-      a: "-750 mV (Ag/AgCl) with polarization verification",
-      b: "-850 mV (Ag/AgCl) with instant-off potential measurement",
-      c: "-950 mV (Ag/AgCl) with current density confirmation",
-      d: "-650 mV (Ag/AgCl) with environmental correction factors",
-      answer: "b",
+      options: JSON.stringify({
+        a: "-750 mV (Ag/AgCl) with polarization verification",
+        b: "-850 mV (Ag/AgCl) with instant-off potential measurement",
+        c: "-950 mV (Ag/AgCl) with current density confirmation",
+        d: "-650 mV (Ag/AgCl) with environmental correction factors"
+      }),
+      correctAnswer: "b",
       order: 3,
     },
   ]);
@@ -549,31 +555,37 @@ This comprehensive ABCDE training with AI tutoring ensures systematic, professio
     {
       quizId: medicAssessment.id,
       prompt: "In the professional ABCDE emergency assessment protocol for diving emergencies, what is the correct systematic sequence and primary clinical focus of each component?",
-      a: "Airway patency assessment, Breathing adequacy evaluation, Circulation status check, Disability neurological assessment, Exposure complete examination with sequential stabilization",
-      b: "Alert level determination, Blood pressure measurement, CPR readiness assessment, Drug administration protocol, Emergency transport preparation",
-      c: "Ascent procedure verification, Buoyancy control assessment, Communication system check, Depth monitoring evaluation, Emergency evacuation preparation",
-      d: "Assessment priority determination, Basic life support initiation, Clinical evaluation completion, Diagnostic testing performance, Emergency procedure implementation",
-      answer: "a",
+      options: JSON.stringify({
+        a: "Airway patency assessment, Breathing adequacy evaluation, Circulation status check, Disability neurological assessment, Exposure complete examination with sequential stabilization",
+        b: "Alert level determination, Blood pressure measurement, CPR readiness assessment, Drug administration protocol, Emergency transport preparation",
+        c: "Ascent procedure verification, Buoyancy control assessment, Communication system check, Depth monitoring evaluation, Emergency evacuation preparation",
+        d: "Assessment priority determination, Basic life support initiation, Clinical evaluation completion, Diagnostic testing performance, Emergency procedure implementation"
+      }),
+      correctAnswer: "a",
       order: 1,
     },
     {
       quizId: medicAssessment.id,
       prompt: "What is the primary clinical difference between Type I and Type II decompression sickness in terms of symptom presentation and treatment urgency requirements?",
-      a: "Type I affects only joint systems with delayed onset, Type II affects only pulmonary systems with immediate onset",
-      b: "Type I involves mild joint pain and skin manifestations with lower urgency, Type II involves serious neurological and pulmonary complications requiring immediate intervention",
-      c: "Type I occurs exclusively at shallow recreational depths, Type II occurs exclusively at deep commercial diving depths",
-      d: "Type I responds to surface oxygen therapy alone, Type II requires immediate surgical intervention and advanced life support",
-      answer: "b",
+      options: JSON.stringify({
+        a: "Type I affects only joint systems with delayed onset, Type II affects only pulmonary systems with immediate onset",
+        b: "Type I involves mild joint pain and skin manifestations with lower urgency, Type II involves serious neurological and pulmonary complications requiring immediate intervention",
+        c: "Type I occurs exclusively at shallow recreational depths, Type II occurs exclusively at deep commercial diving depths",
+        d: "Type I responds to surface oxygen therapy alone, Type II requires immediate surgical intervention and advanced life support"
+      }),
+      correctAnswer: "b",
       order: 2,
     },
     {
       quizId: medicAssessment.id,
       prompt: "In arterial gas embolism (AGE) emergency management, what is the optimal patient positioning and immediate treatment protocol for maximum effectiveness?",
-      a: "Upright sitting position with standard oxygen therapy and gradual ascent procedures",
-      b: "Left lateral recumbent position with immediate high-flow oxygen therapy and urgent hyperbaric facility evacuation",
-      c: "Prone position with assisted mechanical ventilation and intravenous fluid administration",
-      d: "Right lateral position with standard oxygen therapy and delayed transport to medical facility",
-      answer: "b",
+      options: JSON.stringify({
+        a: "Upright sitting position with standard oxygen therapy and gradual ascent procedures",
+        b: "Left lateral recumbent position with immediate high-flow oxygen therapy and urgent hyperbaric facility evacuation",
+        c: "Prone position with assisted mechanical ventilation and intravenous fluid administration",
+        d: "Right lateral position with standard oxygen therapy and delayed transport to medical facility"
+      }),
+      correctAnswer: "b",
       order: 3,
     },
   ]);

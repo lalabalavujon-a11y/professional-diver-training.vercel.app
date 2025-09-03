@@ -43,13 +43,16 @@ export default function Contact() {
   const onSubmit = async (data: ContactForm) => {
     setIsSubmitting(true);
     try {
-      await apiRequest('/api/support/ticket', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      await apiRequest(
+        'POST',
+        '/api/support/ticket',
+        {
+          name: data.name,
+          email: data.email,
+          subject: data.subject,
+          message: data.message,
+        }
+      );
 
       toast({
         title: "Message sent successfully!",

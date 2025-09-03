@@ -140,10 +140,10 @@ export default function DemoUsers() {
               <CardContent>
                 <div className="space-y-4">
                   <UserStatusBadge
-                    role={selectedUser.role as any}
-                    subscriptionType={selectedUser.subscriptionType as any}
-                    subscriptionDate={selectedUser.subscriptionDate}
-                    trialExpiresAt={selectedUser.trialExpiresAt}
+                    role={selectedUser.role as 'USER' | 'ADMIN' | 'SUPER_ADMIN' | 'LIFETIME' | 'AFFILIATE'}
+                    subscriptionType={selectedUser.subscriptionType as 'TRIAL' | 'MONTHLY' | 'ANNUAL' | 'LIFETIME'}
+                    subscriptionDate={selectedUser.subscriptionDate || undefined}
+                    trialExpiresAt={selectedUser.trialExpiresAt || undefined}
                     userName={selectedUser.name}
                   />
 

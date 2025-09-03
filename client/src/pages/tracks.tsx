@@ -28,6 +28,7 @@ const mockTracks = [
     id: "1",
     title: "Commercial Diving Fundamentals",
     slug: "commercial-diving-fundamentals",
+    summary: "Master the essential skills and safety protocols for commercial diving operations.",
     description: "Master the essential skills and safety protocols for commercial diving operations.",
     level: "Beginner",
     duration: "8 weeks",
@@ -41,6 +42,7 @@ const mockTracks = [
     id: "2", 
     title: "Advanced Underwater Welding",
     slug: "advanced-underwater-welding",
+    summary: "Professional underwater welding techniques and certification preparation.",
     description: "Professional underwater welding techniques and certification preparation.",
     level: "Advanced",
     duration: "12 weeks", 
@@ -54,6 +56,7 @@ const mockTracks = [
     id: "3",
     title: "Dive Supervision & Management",
     slug: "dive-supervision-management", 
+    summary: "Leadership training for dive supervisors and project managers.",
     description: "Leadership training for dive supervisors and project managers.",
     level: "Expert",
     duration: "10 weeks",
@@ -67,6 +70,7 @@ const mockTracks = [
     id: "4",
     title: "NDT Inspection Techniques",
     slug: "ndt-inspection-techniques",
+    summary: "Non-destructive testing methods for underwater structural inspection.",
     description: "Non-destructive testing methods for underwater structural inspection.",
     level: "Intermediate",
     duration: "6 weeks",
@@ -80,6 +84,7 @@ const mockTracks = [
     id: "5",
     title: "Saturation Diving Operations",
     slug: "saturation-diving-operations",
+    summary: "Comprehensive training for saturation diving systems and procedures.", 
     description: "Comprehensive training for saturation diving systems and procedures.", 
     level: "Expert",
     duration: "16 weeks",
@@ -93,6 +98,7 @@ const mockTracks = [
     id: "6",
     title: "Offshore Platform Safety",
     slug: "offshore-platform-safety",
+    summary: "Safety protocols and emergency procedures for offshore diving operations.",
     description: "Safety protocols and emergency procedures for offshore diving operations.",
     level: "Intermediate", 
     duration: "4 weeks",
@@ -123,6 +129,7 @@ export default function Tracks() {
       id: track.id,
       title: track.title,
       slug: track.slug,
+      summary: track.summary || "Professional diving training course",
       description: track.summary || "Professional diving training course",
       level: "Intermediate", // Default level
       duration: "8 weeks",
@@ -132,7 +139,10 @@ export default function Tracks() {
       completed: false,
       category: "Professional Training",
       aiTutor: track.aiTutor
-    })) : mockTracks;
+    })) : mockTracks.map(track => ({
+      ...track,
+      aiTutor: undefined
+    }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50">
