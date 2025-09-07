@@ -1,6 +1,6 @@
 # Professional Diver Training Platform
 
-[![CI](https://github.com/your-username/professional-diver-training/workflows/CI/badge.svg)](https://github.com/your-username/professional-diver-training/actions)
+[![CI](https://github.com/JonLalabalavu/professional-diver-training/workflows/CI/badge.svg)](https://github.com/JonLalabalavu/professional-diver-training/actions)
 
 A comprehensive, brand-neutral training and revision platform for commercial divers, featuring AI-powered tutoring, interactive lessons, and progress tracking.
 
