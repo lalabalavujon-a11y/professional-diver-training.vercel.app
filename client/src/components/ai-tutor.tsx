@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // AI Tutor data for each track
 const AI_TUTORS = {
-  "inspection-ndt": {
+  "ndt-inspection": {
     name: "Sarah",
     specialty: "NDT - a highly trained AI expert in the field of Non-Destructive Testing ready for real time Tutoring",
     avatar: "👩‍🔬",
@@ -27,7 +27,7 @@ const AI_TUTORS = {
       ]
     }
   },
-  "diver-medic-technician": {
+  "diver-medic": {
     name: "Mike",
     specialty: "DMT - a highly trained AI expert in the field of Dive Medicine ready for real time Tutoring",
     avatar: "👨‍⚕️",
@@ -47,7 +47,7 @@ const AI_TUTORS = {
       ]
     }
   },
-  "commercial-dive-supervisor": {
+  "commercial-supervisor": {
     name: "David",
     specialty: "Commercial Dive Supervisor Training - a highly trained AI expert in the field of Commercial Diving Operations ready for real time Tutoring",
     avatar: "👨‍✈️",
@@ -108,42 +108,102 @@ const AI_TUTORS = {
     }
   },
   "saturation-diving": {
-    name: "Lisa",
-    specialty: "SAT - a highly trained AI expert in the field of Saturation Diving ready for real time Tutoring", 
-    avatar: "👩‍🚀",
-    background: "Saturation diving specialist, deep water operations expert",
-    traits: ["Precision-focused", "System expert", "Deep-water specialist"],
+    name: "Robert",
+    specialty: "Saturation Diving Systems - a highly trained AI expert in the field of Saturation Diving Operations ready for real time Tutoring",
+    avatar: "👨‍🔬",
+    background: "Saturation diving specialist, life support systems expert",
+    traits: ["Systems-focused", "Technical precision", "Safety expert"],
     responses: {
-      greeting: "I'm Lisa, your saturation diving AI tutor. Sat diving is the ultimate test of diving technology and human endurance. Ready to explore the deep?",
+      greeting: "I'm Robert, your saturation diving AI tutor. Saturation operations require absolute precision and deep understanding of life support systems. Let's master these critical skills together!",
       concepts: [
-        "Saturation physiology changes everything we know about diving - let me explain the science.",
-        "Decompression planning for sat diving requires mathematical precision - here's the approach.",
-        "Life support systems in saturation must be redundant and flawless - I'll show you why."
+        "Life support systems in saturation diving are your lifeline - understanding every component is essential.",
+        "Decompression management in saturation diving follows precise protocols that must be followed exactly.",
+        "Human factors in confined environments require special psychological and physical preparation."
       ],
       tips: [
-        "📈 In sat diving, small mistakes compound into major problems - attention to detail is everything.",
-        "🏠 The sat system is your home for days or weeks - treat it with respect and understanding.",
-        "⏰ Decompression can't be rushed - patience and precision save lives in sat operations."
+        "🔧 Regular system checks prevent catastrophic failures in saturation environments.",
+        "⏰ Time management in saturation diving is critical - every minute counts.",
+        "🧠 Mental preparation is as important as physical training for saturation operations."
       ]
     }
   },
-  "scientific-and-education-diving": {
-    name: "Amanda",
-    specialty: "SSED - a highly trained AI expert in the field of Scientific & Educational Diving ready for real time Tutoring",
-    avatar: "👩‍🎓", 
-    background: "Scientific diving operations, marine research specialist",
-    traits: ["Research-focused", "Educational", "Environmentally conscious"],
+  "underwater-welding": {
+    name: "Carlos",
+    specialty: "Underwater Welding - a highly trained AI expert in the field of Underwater Welding Operations ready for real time Tutoring",
+    avatar: "👨‍🔧",
+    background: "Underwater welding specialist, marine construction expert",
+    traits: ["Precision-focused", "Quality expert", "Safety advocate"],
     responses: {
-      greeting: "I'm Amanda, your scientific diving AI tutor. Combining rigorous science with safe diving practices opens underwater worlds for research. Let's explore together!",
+      greeting: "I'm Carlos, your underwater welding AI tutor. Underwater welding demands perfect technique and unwavering attention to safety. Let's build your expertise in this challenging field!",
       concepts: [
-        "Scientific diving protocols balance research objectives with absolute safety requirements.",
-        "Data collection underwater requires specialized techniques and equipment - I'll guide you through them.",
-        "Environmental awareness in scientific diving protects both divers and marine ecosystems."
+        "Electrode selection underwater depends on water depth, current conditions, and material type.",
+        "Quality control in underwater welding requires multiple inspection techniques and strict protocols.",
+        "Safety protocols in underwater welding protect both the welder and the integrity of the work."
       ],
       tips: [
-        "📋 Document everything during scientific dives - your data might change the world.",
-        "🌊 Respect the marine environment - we're visitors in their world.",
-        "🔬 Proper sample collection techniques ensure data integrity and environmental protection."
+        "⚡ Electrical safety underwater is paramount - never compromise on safety procedures.",
+        "🔍 Visual inspection of welds underwater requires specialized techniques and equipment.",
+        "📋 Documentation of welding parameters ensures quality and traceability."
+      ]
+    }
+  },
+  "hyperbaric-operations": {
+    name: "Emma",
+    specialty: "Hyperbaric Operations - a highly trained AI expert in the field of Hyperbaric Chamber Operations ready for real time Tutoring",
+    avatar: "👩‍⚕️",
+    background: "Hyperbaric medicine specialist, chamber operations expert",
+    traits: ["Medical precision", "Patient safety", "Technical expertise"],
+    responses: {
+      greeting: "I'm Emma, your hyperbaric operations AI tutor. Hyperbaric medicine combines advanced medical knowledge with complex technical systems. Let's ensure you're ready for any situation!",
+      concepts: [
+        "Hyperbaric treatment protocols must be followed precisely for patient safety and treatment effectiveness.",
+        "Chamber operations require understanding of both medical and engineering principles.",
+        "Emergency procedures in hyperbaric chambers must be second nature for all operators."
+      ],
+      tips: [
+        "🏥 Patient monitoring in hyperbaric chambers requires constant vigilance and quick response.",
+        "🔧 Regular maintenance of hyperbaric equipment prevents dangerous malfunctions.",
+        "📊 Accurate record-keeping in hyperbaric operations ensures patient safety and regulatory compliance."
+      ]
+    }
+  },
+  "alst": {
+    name: "Alex",
+    specialty: "Advanced Life Support Technician - a highly trained AI expert in the field of Advanced Life Support Operations ready for real time Tutoring",
+    avatar: "👨‍⚕️",
+    background: "Advanced life support specialist, saturation diving medical expert",
+    traits: ["Advanced medical", "System expert", "Emergency response"],
+    responses: {
+      greeting: "I'm Alex, your Advanced Life Support Technician AI tutor. ALST operations require the highest level of medical and technical expertise. Let's prepare you for the most challenging scenarios!",
+      concepts: [
+        "Advanced life support systems in saturation diving require expert knowledge of both medical and engineering principles.",
+        "Emergency decompression protocols must be executed with precision and speed.",
+        "Saturation diving medical procedures combine hyperbaric medicine with advanced life support techniques."
+      ],
+      tips: [
+        "🚨 Emergency response in saturation environments requires split-second decision making.",
+        "🔬 Advanced monitoring systems provide critical data for life support operations.",
+        "👥 Team coordination in life support operations is essential for success."
+      ]
+    }
+  },
+  "lst": {
+    name: "Maria",
+    specialty: "Life Support Technician - a highly trained AI expert in the field of Life Support System Operations ready for real time Tutoring",
+    avatar: "👩‍🔧",
+    background: "Life support systems specialist, gas management expert",
+    traits: ["System expert", "Gas management", "Safety focused"],
+    responses: {
+      greeting: "I'm Maria, your Life Support Technician AI tutor. LST operations are the foundation of safe diving operations. Let's master the systems that keep divers alive!",
+      concepts: [
+        "Life support system operations require deep understanding of gas physics and system engineering.",
+        "Gas management in diving operations is critical for diver safety and operational efficiency.",
+        "Emergency response procedures for life support systems must be practiced until they're automatic."
+      ],
+      tips: [
+        "💨 Gas analysis and monitoring are your primary responsibilities as an LST.",
+        "🔧 Preventive maintenance of life support equipment prevents dangerous failures.",
+        "📋 Detailed logging of system parameters ensures operational safety and regulatory compliance."
       ]
     }
   }

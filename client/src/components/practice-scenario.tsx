@@ -7,7 +7,7 @@ import { Play, CheckCircle, AlertTriangle, Wrench, Users, Clock } from "lucide-r
 
 // Practice scenarios for each track
 const PRACTICE_SCENARIOS = {
-  "inspection-ndt": [
+  "ndt-inspection": [
     {
       id: "pier-inspection",
       title: "Offshore Platform Pier Inspection",

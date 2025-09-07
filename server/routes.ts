@@ -255,27 +255,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Tracks routes
   app.get("/api/tracks", async (req, res) => {
     try {
-      const { db } = await import('./db.js');
-      const { tracks, lessons } = await import('@shared/schema-sqlite');
-      
-      // Get all tracks
-      const allTracks = await db.select().from(tracks);
-      
-      // For each track, get its lessons
-      const tracksWithLessons = await Promise.all(
-        allTracks.map(async (track: any) => {
-          const trackLessons = await db.select().from(lessons)
-            .where(eq(lessons.trackId, track.id))
-            .orderBy(lessons.order);
-          
-          return {
-            ...track,
-            lessons: trackLessons
-          };
-        })
-      );
-      
-      res.json(tracksWithLessons);
+      const tracks = await tempStorage.getAllTracks();
+      res.json(tracks);
     } catch (error) {
       console.error('Tracks API error:', error);
       res.status(500).json({ error: "Failed to fetch tracks" });
@@ -285,14 +266,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/tracks/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
-      const { db } = await import('./db.js');
-      const { tracks } = await import('@shared/schema-sqlite');
-      const track = await db.select().from(tracks).where(eq(tracks.slug, slug)).limit(1);
+      const track = await tempStorage.getTrackBySlug(slug);
       
-      if (!track || track.length === 0) {
+      if (!track) {
         return res.status(404).json({ error: "Track not found" });
       }
-      res.json(track[0]);
+      
+      res.json(track);
     } catch (error) {
       console.error('Track by slug API error:', error);
       res.status(500).json({ error: "Failed to fetch track" });

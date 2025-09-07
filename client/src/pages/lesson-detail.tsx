@@ -3,10 +3,123 @@ import { useRoute } from "wouter";
 import Navigation from "@/components/navigation";
 import AITutor from "@/components/ai-tutor";
 import PracticeScenario from "@/components/practice-scenario";
+import EnhancedLessonContent from "@/components/enhanced-lesson-content";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Bookmark, FileText, Video } from "lucide-react";
 import { Link } from "wouter";
 import type { Lesson } from "@shared/schema";
+
+// Track outlines for each professional diving subject
+const TRACK_OUTLINES = {
+  "ndt-inspection": [
+    "Visual Inspection Fundamentals",
+    "Magnetic Particle Testing",
+    "Ultrasonic Thickness Gauging",
+    "Corrosion Assessment",
+    "Documentation Standards",
+    "Final Assessment"
+  ],
+  "diver-medic": [
+    "Respiratory System",
+    "Circulatory System", 
+    "Gas Laws & Pressure Effects",
+    "Emergency Assessment (ABCDE)",
+    "Diving Injuries & Treatment",
+    "Final Assessment"
+  ],
+  "commercial-supervisor": [
+    "Dive Planning Fundamentals",
+    "Risk Assessment & Safety",
+    "Team Management",
+    "Emergency Response",
+    "Quality Assurance",
+    "Final Assessment"
+  ],
+  "saturation-diving": [
+    "Life Support Systems",
+    "Decompression Management",
+    "Human Factors",
+    "Emergency Procedures",
+    "System Maintenance",
+    "Final Assessment"
+  ],
+  "underwater-welding": [
+    "Welding Fundamentals",
+    "Electrode Selection",
+    "Quality Control",
+    "Safety Protocols",
+    "Advanced Techniques",
+    "Final Assessment"
+  ],
+  "hyperbaric-operations": [
+    "Chamber Operations",
+    "Treatment Protocols",
+    "Patient Monitoring",
+    "Emergency Procedures",
+    "Equipment Maintenance",
+    "Final Assessment"
+  ],
+  "alst": [
+    "Advanced Life Support",
+    "Emergency Decompression",
+    "Saturation Medical Procedures",
+    "System Troubleshooting",
+    "Leadership & Communication",
+    "Final Assessment"
+  ],
+  "lst": [
+    "Life Support Fundamentals",
+    "Gas Management",
+    "Emergency Response",
+    "Equipment Operations",
+    "Safety Systems",
+    "Final Assessment"
+  ]
+};
+
+function getTrackOutline(trackId: string): string[] {
+  return TRACK_OUTLINES[trackId as keyof typeof TRACK_OUTLINES] || TRACK_OUTLINES["ndt-inspection"];
+}
+
+// Subject-specific resources for each professional diving subject
+const SUBJECT_RESOURCES = {
+  "ndt-inspection": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Inspection Checklists" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "NDT Technique Videos" }
+  ],
+  "diver-medic": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Medical Protocols" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Emergency Procedures" }
+  ],
+  "commercial-supervisor": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Safety Guidelines" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Leadership Training" }
+  ],
+  "saturation-diving": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "System Manuals" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Life Support Videos" }
+  ],
+  "underwater-welding": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Welding Procedures" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Technique Demonstrations" }
+  ],
+  "hyperbaric-operations": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Treatment Protocols" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Chamber Operations" }
+  ],
+  "alst": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Life Support Manuals" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Advanced Procedures" }
+  ],
+  "lst": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "System Documentation" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Equipment Training" }
+  ]
+};
+
+function getSubjectResources(trackId: string): Array<{icon: JSX.Element, title: string}> {
+  return SUBJECT_RESOURCES[trackId as keyof typeof SUBJECT_RESOURCES] || SUBJECT_RESOURCES["ndt-inspection"];
+}
 
 export default function LessonDetail() {
   const [, params] = useRoute("/lessons/:id");
@@ -90,9 +203,11 @@ export default function LessonDetail() {
           
           <div className="flex">
             <div className="flex-1 p-6">
-              <article className="prose prose-slate max-w-none" data-testid="lesson-content">
-                <div dangerouslySetInnerHTML={{ __html: lesson.content || "No content available." }} />
-              </article>
+              <EnhancedLessonContent 
+                content={lesson.content || "No content available."}
+                trackSlug={lesson.trackId || 'ndt-inspection'}
+                lessonTitle={lesson.title}
+              />
 
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <div className="flex items-center justify-between">
@@ -144,40 +259,32 @@ export default function LessonDetail() {
               <div className="mb-6">
                 <h3 className="font-semibold text-slate-900 mb-3">Track Outline</h3>
                 <div className="space-y-2">
-                  <div className="flex items-center p-2 bg-primary-50 rounded-lg border border-primary-200">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full mr-3"></div>
-                    <span className="text-sm font-medium text-primary-700">Respiratory System</span>
-                  </div>
-                  <div className="flex items-center p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                    <div className="w-2 h-2 bg-gray-300 rounded-full mr-3"></div>
-                    <span className="text-sm text-slate-600">Circulatory System</span>
-                  </div>
-                  <div className="flex items-center p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                    <div className="w-2 h-2 bg-gray-300 rounded-full mr-3"></div>
-                    <span className="text-sm text-slate-600">Gas Laws</span>
-                  </div>
-                  <div className="flex items-center p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                    <div className="w-2 h-2 bg-gray-300 rounded-full mr-3"></div>
-                    <span className="text-sm text-slate-600">Pressure Effects</span>
-                  </div>
-                  <div className="flex items-center p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                    <div className="w-2 h-2 bg-gray-300 rounded-full mr-3"></div>
-                    <span className="text-sm text-slate-600">Final Assessment</span>
-                  </div>
+                  {getTrackOutline(lesson?.trackId || 'ndt-inspection').map((item, index) => (
+                    <div key={index} className={`flex items-center p-2 rounded-lg cursor-pointer ${
+                      index === 0 
+                        ? 'bg-primary-50 border border-primary-200' 
+                        : 'hover:bg-gray-100'
+                    }`}>
+                      <div className={`w-2 h-2 rounded-full mr-3 ${
+                        index === 0 ? 'bg-primary-500' : 'bg-gray-300'
+                      }`}></div>
+                      <span className={`text-sm ${
+                        index === 0 ? 'font-medium text-primary-700' : 'text-slate-600'
+                      }`}>{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">Resources</h3>
                 <div className="space-y-2">
-                  <a href="#" className="flex items-center p-2 text-primary-600 hover:bg-primary-50 rounded-lg" data-testid="link-diagrams">
-                    <FileText className="w-4 h-4 mr-2" />
-                    <span className="text-sm">Anatomy Diagrams</span>
-                  </a>
-                  <a href="#" className="flex items-center p-2 text-primary-600 hover:bg-primary-50 rounded-lg" data-testid="link-video">
-                    <Video className="w-4 h-4 mr-2" />
-                    <span className="text-sm">Video Tutorial</span>
-                  </a>
+                  {getSubjectResources(lesson?.trackId || 'ndt-inspection').map((resource, index) => (
+                    <a key={index} href="#" className="flex items-center p-2 text-primary-600 hover:bg-primary-50 rounded-lg" data-testid={`link-resource-${index}`}>
+                      {resource.icon}
+                      <span className="text-sm">{resource.title}</span>
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
@@ -185,10 +292,10 @@ export default function LessonDetail() {
         </section>
 
         {/* AI Tutor Integration */}
-        <AITutor trackSlug="inspection-ndt" lessonTitle={lesson.title} />
+        <AITutor trackSlug={lesson.trackId || 'ndt-inspection'} lessonTitle={lesson.title} />
         
         {/* Practice Scenarios */}
-        <PracticeScenario trackSlug="inspection-ndt" />
+        <PracticeScenario trackSlug={lesson.trackId || 'ndt-inspection'} />
       </main>
     </div>
   );
