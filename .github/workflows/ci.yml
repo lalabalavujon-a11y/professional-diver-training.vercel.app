@@ -61,6 +61,14 @@ jobs:
           done
           curl -fsS http://127.0.0.1:5000/health
 
+      - name: Deep health check with LangChain pipeline test
+        run: |
+          curl --fail http://127.0.0.1:5000/health | tee health.json
+          jq '.services.db' health.json | grep -q 'sqlite-connected'
+          jq '.services.api' health.json | grep -q 'express-running'
+          jq '.services.langchain' health.json | grep -E -q 'pipeline-|langchain-dev-mode'
+          echo "✅ All health checks passed"
+
       - name: Start Vite (background)
         run: |
           npx vite --host 127.0.0.1 --port 3000 > vite.log 2>&1 &

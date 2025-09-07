@@ -22,3 +22,4 @@ if (failures.length) {
   process.exit(1);
 }
 console.log('✅ Vite proxy config OK');
+

@@ -115,6 +115,36 @@ const professionalExamTracks: ExamTrack[] = [
     completed: false,
     hasVoiceQuestions: false,
     difficulty: 'Intermediate'
+  },
+  {
+    id: "alst",
+    title: "Advanced Life Support Technician (ALST)",
+    slug: "alst",
+    description: "Advanced life support operations, emergency decompression protocols, and saturation diving medical procedures",
+    questionsCount: 70,
+    timeLimit: 120,
+    passingScore: 85,
+    attempts: 0,
+    maxAttempts: 3,
+    bestScore: null,
+    completed: false,
+    hasVoiceQuestions: true,
+    difficulty: 'Expert'
+  },
+  {
+    id: "lst",
+    title: "Life Support Technician (LST)",
+    slug: "lst",
+    description: "Life support system operations, gas management, and emergency response procedures",
+    questionsCount: 60,
+    timeLimit: 100,
+    passingScore: 80,
+    attempts: 0,
+    maxAttempts: 3,
+    bestScore: null,
+    completed: false,
+    hasVoiceQuestions: true,
+    difficulty: 'Advanced'
   }
 ];
 

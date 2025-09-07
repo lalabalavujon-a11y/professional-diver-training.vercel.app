@@ -2,6 +2,7 @@ import './bootstrap/env';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { aiTutorRouter } from "./ai-tutor";
+import healthRouter from "./health";
 
 const app = express();
 app.use(express.json());
@@ -43,9 +44,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', ts: new Date().toISOString(), env: process.env.NODE_ENV });
-});
+// Mount comprehensive health check router
+app.use('/health', healthRouter);
 
 app.get('/', (_req, res) => res.type('text/plain').send('OK'));
 

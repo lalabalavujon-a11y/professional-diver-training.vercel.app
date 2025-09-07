@@ -4,8 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev:api": "NODE_ENV=development PORT=5000 tsx watch server/index.ts",
-    "dev:web": "vite --host 127.0.0.1 --port 3000",
+    "dev:api": "NODE_ENV=development PORT=5000 tsx server/index.ts",
+    "dev:web": "vite --host 127.0.0.1 --port 3001",
     "dev:all": "npm-run-all -p dev:api dev:web",
     "build": "vite build",
     "start": "cross-env NODE_ENV=production node dist/server/index.js",
