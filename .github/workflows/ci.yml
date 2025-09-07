@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Verify .env.local NOT committed
+        run: |
+          if git ls-files --error-unmatch .env.local >/dev/null 2>&1; then
+            echo "::error::Do not commit .env.local. Remove it from git and add it to .gitignore."
+            exit 1
+          fi
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Static checks (ports free + vite config)
+        run: |
+          node scripts/port-assert.mjs
+          node scripts/verify-vite-proxy.mjs
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Start API (background)
+        run: |
+          NODE_ENV=development PORT=5000 npx tsx server/index.ts > api.log 2>&1 &
+          echo $! > api.pid
+          # wait up to 30s for /health
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:5000/health >/dev/null; then
+              echo "API ready"; break
+            fi
+            sleep 0.5
+          done
+          curl -fsS http://127.0.0.1:5000/health
+
+      - name: Start Vite (background)
+        run: |
+          npx vite --host 127.0.0.1 --port 3000 > vite.log 2>&1 &
+          echo $! > vite.pid
+          # wait up to 30s for Vite to serve
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then
+              echo "Vite ready"; break
+            fi
+            sleep 0.5
+          done
+
+      - name: Proxy sanity
+        run: |
+          curl -fsS http://127.0.0.1:3000/api/health
+          echo "Proxy OK"
+
+      - name: Teardown
+        if: always()
+        run: |
+          kill $(cat api.pid) 2>/dev/null || true
+          kill $(cat vite.pid) 2>/dev/null || true
+          rm -f api.pid vite.pid
+          echo "Logs:"
+          tail -n +1 api.log || true
+          tail -n +1 vite.log || true

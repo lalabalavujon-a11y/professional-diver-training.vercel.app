@@ -8,23 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Timer, Mic, MicOff, Volume2, ChevronLeft, ChevronRight, Clock, Brain, FileText } from "lucide-react";
 import Navigation from "@/components/navigation";
-
-interface ExamQuestion {
-  id: string;
-  type: 'MULTIPLE_CHOICE' | 'WRITTEN' | 'TRUE_FALSE';
-  prompt: string;
-  options?: string[];
-  correctAnswer?: string;
-  explanation?: string;
-  points: number;
-  order: number;
-}
-
-// Sample professional diving exam questions
-const sampleQuestions: ExamQuestion[] = [
-  {
-    id: "1",
-    type: "MULTIPLE_CHOICE",
+// Embedded exam questions to avoid import issues
+const examQuestions = {
+  ndt: [
+    {
+      id: "ndt-1",
+      type: "MULTIPLE_CHOICE" as const,
     prompt: "In professional commercial underwater inspection operations, what is the primary advantage of systematic grid pattern inspection methodology for ensuring comprehensive coverage and quality assurance?",
     options: [
       "Reduces total inspection time and operational costs significantly while maintaining basic coverage",
@@ -38,15 +27,8 @@ const sampleQuestions: ExamQuestion[] = [
     order: 1
   },
   {
-    id: "2",
-    type: "WRITTEN",
-    prompt: "Describe the complete ABCDE emergency assessment protocol for diving emergencies. Include the specific clinical focus of each component and explain how this systematic approach improves patient outcomes in underwater emergency situations. Provide specific examples of assessment techniques for each component.",
-    points: 5,
-    order: 2
-  },
-  {
-    id: "3",
-    type: "MULTIPLE_CHOICE",
+      id: "ndt-2",
+      type: "MULTIPLE_CHOICE" as const,
     prompt: "Which corrosion type is most commonly associated with dissimilar metal connections in marine environments and requires electrochemical galvanic series analysis for proper assessment?",
     options: [
       "General uniform corrosion across large surface areas of marine structures",
@@ -57,41 +39,146 @@ const sampleQuestions: ExamQuestion[] = [
     correctAnswer: "Galvanic corrosion with preferential anode attack at connection points and metal interfaces",
     explanation: "Galvanic corrosion occurs when dissimilar metals are in electrical contact in seawater, creating a galvanic cell where the more anodic metal corrodes preferentially at connection points.",
     points: 2,
-    order: 3
-  },
-  {
-    id: "4",
-    type: "TRUE_FALSE",
-    prompt: "According to NACE industry standards for cathodic protection, the minimum protection potential for steel structures in seawater using Silver/Silver Chloride reference electrode is -750 mV with polarization verification.",
-    options: ["True", "False"],
-    correctAnswer: "False",
-    explanation: "The minimum cathodic protection potential for steel in seawater is -850 mV (Ag/AgCl) with instant-off potential measurement, not -750 mV.",
-    points: 2,
-    order: 4
-  },
-  {
-    id: "5",
-    type: "WRITTEN",
-    prompt: "Analyze the safety considerations and operational procedures for saturation diving operations at depths exceeding 150 meters. Include discussion of decompression management, life support systems, emergency protocols, and the physiological challenges faced by divers during extended saturation exposures.",
-    points: 8,
-    order: 5
+      order: 2
+    }
+  ],
+  lst: [
+    {
+      id: "lst-1",
+      type: "MULTIPLE_CHOICE" as const,
+      prompt: "In advanced life support operations, what is the primary function of the tertiary backup system during emergency scenarios?",
+      options: [
+        "To reduce operational costs during normal operations",
+        "To provide immediate life support continuity when primary and secondary systems fail",
+        "To minimize gas consumption during routine maintenance",
+        "To standardize training procedures for new technicians"
+      ],
+      correctAnswer: "To provide immediate life support continuity when primary and secondary systems fail",
+      explanation: "Tertiary systems are emergency backup systems designed to maintain life support when both primary and secondary systems are compromised.",
+      points: 3,
+      order: 1
+    }
+  ],
+  alst: [
+    {
+      id: "alst-1",
+      type: "MULTIPLE_CHOICE" as const,
+      prompt: "In advanced life support technician operations, what is the primary responsibility during emergency decompression scenarios?",
+      options: [
+        "To minimize gas consumption during emergency procedures",
+        "To maintain life support continuity while managing emergency decompression protocols",
+        "To reduce operational costs during crisis situations",
+        "To standardize emergency response training"
+      ],
+      correctAnswer: "To maintain life support continuity while managing emergency decompression protocols",
+      explanation: "ALSTs must ensure continuous life support while coordinating emergency decompression procedures to protect diver safety.",
+      points: 3,
+      order: 1
+    }
+  ],
+  dmt: [
+    {
+      id: "dmt-1",
+      type: "MULTIPLE_CHOICE" as const,
+      prompt: "In diving medical technician operations, what is the primary focus during underwater emergency medical situations?",
+      options: [
+        "To minimize medical equipment costs during emergencies",
+        "To provide immediate medical assessment and stabilization while managing diving-specific complications",
+        "To reduce training requirements for medical personnel",
+        "To standardize medical procedures across all diving operations"
+      ],
+      correctAnswer: "To provide immediate medical assessment and stabilization while managing diving-specific complications",
+      explanation: "DMTs must provide immediate medical care while understanding and managing diving-specific medical complications like decompression sickness and barotrauma.",
+      points: 3,
+      order: 1
+    }
+  ],
+  "commercial-supervisor": [
+    {
+      id: "cds-1",
+      type: "MULTIPLE_CHOICE" as const,
+      prompt: "In commercial dive supervision, what is the primary responsibility during complex underwater operations?",
+      options: [
+        "To minimize operational costs while maintaining safety standards",
+        "To coordinate all aspects of diving operations while ensuring diver safety and operational efficiency",
+        "To reduce training requirements for dive teams",
+        "To standardize procedures across all commercial diving operations"
+      ],
+      correctAnswer: "To coordinate all aspects of diving operations while ensuring diver safety and operational efficiency",
+      explanation: "Commercial dive supervisors must coordinate all operational aspects while maintaining the highest safety standards and operational efficiency.",
+      points: 3,
+      order: 1
+    }
+  ]
+};
+
+interface ExamQuestion {
+  id: string;
+  type: 'MULTIPLE_CHOICE' | 'WRITTEN' | 'TRUE_FALSE';
+  prompt: string;
+  options?: string[];
+  correctAnswer?: string;
+  explanation?: string;
+  points: number;
+  order: number;
+}
+
+// Function to get questions based on exam slug
+const getQuestionsForExam = (slug: string): ExamQuestion[] => {
+  console.log('Getting questions for slug:', slug);
+  console.log('Available exam questions keys:', Object.keys(examQuestions));
+  const questions = examQuestions[slug as keyof typeof examQuestions];
+  if (!questions) {
+    console.warn(`No questions found for exam slug: ${slug}`);
+    return [];
   }
-];
+  console.log('Found questions:', questions.length);
+  return questions;
+};
 
 export default function ExamInterface() {
   const [match, params] = useRoute("/exams/:slug/start");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [timeRemaining, setTimeRemaining] = useState(7200); // 2 hours in seconds
   const [isRecording, setIsRecording] = useState(false);
   const [showExplanations, setShowExplanations] = useState(false);
   const [examSubmitted, setExamSubmitted] = useState(false);
 
-  const currentQuestion = sampleQuestions[currentQuestionIndex];
-  const totalQuestions = sampleQuestions.length;
-  const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+  // Get appropriate time limit based on exam type
+  const getTimeLimit = (slug: string): number => {
+    const timeLimits: Record<string, number> = {
+      'ndt': 1800,      // 30 minutes for NDT
+      'lst': 2400,      // 40 minutes for LST
+      'alst': 2700,     // 45 minutes for ALST
+      'dmt': 2100,      // 35 minutes for DMT
+      'commercial-supervisor': 3600  // 60 minutes for Commercial Supervisor
+    };
+    return timeLimits[slug] || 1800; // Default to 30 minutes
+  };
 
-  // Timer countdown
+  const [timeRemaining, setTimeRemaining] = useState(
+    match ? getTimeLimit(params.slug) : 1800
+  );
+
+  // Get questions based on exam slug
+  const questions = match ? getQuestionsForExam(params.slug) : [];
+  const currentQuestion = questions[currentQuestionIndex];
+  const totalQuestions = questions.length;
+  const progressPercentage = totalQuestions > 0 ? ((currentQuestionIndex + 1) / totalQuestions) * 100 : 0;
+
+  // Get exam title based on slug
+  const getExamTitle = (slug: string): string => {
+    const titles: Record<string, string> = {
+      'ndt': 'NDT Inspection Practice Test',
+      'lst': 'LST Life Support Practice Test',
+      'alst': 'ALST Advanced Life Support Practice Test',
+      'dmt': 'DMT Diving Medical Practice Test',
+      'commercial-supervisor': 'Commercial Dive Supervisor Practice Test'
+    };
+    return titles[slug] || 'Professional Diving Practice Test';
+  };
+
+  // Timer countdown - MUST be before any conditional returns
   useEffect(() => {
     if (timeRemaining > 0 && !examSubmitted) {
       const timer = setTimeout(() => setTimeRemaining(timeRemaining - 1), 1000);
@@ -100,6 +187,28 @@ export default function ExamInterface() {
       handleSubmitExam();
     }
   }, [timeRemaining, examSubmitted]);
+
+  // Handle case when no questions are found
+  if (match && totalQuestions === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="container mx-auto px-4 py-8">
+          <Card>
+            <CardContent className="p-8 text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">Exam Not Found</h1>
+              <p className="text-gray-600 mb-6">
+                No questions found for the exam: {params.slug}
+              </p>
+              <Button onClick={() => window.history.back()}>
+                Go Back
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -161,7 +270,7 @@ export default function ExamInterface() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-bold text-slate-900" data-testid="text-exam-title">
-                NDT Inspection Practice Test
+                {match ? getExamTitle(params.slug) : 'Professional Diving Practice Test'}
               </h1>
               <p className="text-slate-600">Prepare for Commercial Diving Certification Exams</p>
             </div>
@@ -356,7 +465,7 @@ export default function ExamInterface() {
                 AI-Powered Detailed Explanations
               </h2>
               
-              {sampleQuestions.map((question, index) => (
+              {questions.map((question: ExamQuestion, index: number) => (
                 <Card key={question.id} className="border-l-4 border-l-blue-500">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">

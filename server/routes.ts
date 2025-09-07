@@ -8,6 +8,7 @@ import { registerImportRoutes } from "./routes/import-content";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 // import { AILearningPathService } from "./ai-learning-path";
 import { z } from "zod";
+// LangChain AI Tutor routes are now handled by ai-tutor.ts router
 import { insertLessonSchema, insertInviteSchema, insertAttemptSchema } from "@shared/schema";
 import { eq } from "drizzle-orm";
 

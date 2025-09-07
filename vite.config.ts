@@ -32,12 +32,18 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    host: '127.0.0.1',
     port: 3000,
+    strictPort: true, // fail if 3000 is taken (don't auto-switch to 3001)
     proxy: {
-      "/api": {
-        target: "http://localhost:5000",
+      '/api': {
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
-      },
-    },
+        secure: false,
+        ws: true,
+        // Express routes ARE prefixed with "/api" (like "/api/auth/credentials")
+        // so we don't rewrite - just pass through /api/* -> /api/*
+      }
+    }
   },
 });

@@ -1,19 +1,7 @@
+import './bootstrap/env';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import dotenv from "dotenv";
-
-// Error handling for unhandled rejections and exceptions
-process.on('unhandledRejection', (err) => {
-  console.error('UNHANDLED REJECTION', err);
-  process.exit(1);
-});
-process.on('uncaughtException', (err) => {
-  console.error('UNCAUGHT EXCEPTION', err);
-  process.exit(1);
-});
-
-// Load environment variables from parent directory
-dotenv.config({ path: '../.env.local' });
+import { aiTutorRouter } from "./ai-tutor";
 
 const app = express();
 app.use(express.json());
@@ -55,12 +43,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check endpoint
-app.get('/health', (_req, res) => res.json({ status: 'ok', ts: new Date().toISOString() }));
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', ts: new Date().toISOString(), env: process.env.NODE_ENV });
+});
+
+app.get('/', (_req, res) => res.type('text/plain').send('OK'));
 
 async function main() {
   console.log(`🔧 Using local SQLite database for development`);
   // await db.connect()   // if this throws, you'll see it
+  
+  // Mount AI Tutor router
+  app.use('/api/ai-tutor', aiTutorRouter);
+  console.log('🤖 AI Tutor routes mounted at /api/ai-tutor');
   
   const server = await registerRoutes(app);
 
@@ -76,7 +71,6 @@ async function main() {
   const port = Number(process.env.PORT) || 5000;
   const host = process.env.HOST || '127.0.0.1';
   const serverInstance = app.listen(port, host, () => {
-    const addr = serverInstance.address();
     console.log(`[express] serving on http://${host}:${port}`);
   });
 }
@@ -85,3 +79,6 @@ main().catch((e) => {
   console.error('FATAL BOOT ERROR', e);
   process.exit(1);
 });
+
+process.on('unhandledRejection', (e) => { console.error('UNHANDLED REJECTION', e); process.exit(1); });
+process.on('uncaughtException',  (e) => { console.error('UNCAUGHT EXCEPTION',  e); process.exit(1); });
