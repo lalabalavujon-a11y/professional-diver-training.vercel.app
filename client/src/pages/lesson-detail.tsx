@@ -9,6 +9,9 @@ import { ChevronLeft, ChevronRight, Bookmark, FileText, Video } from "lucide-rea
 import { Link } from "wouter";
 import type { Lesson } from "@shared/schema";
 
+// Extended lesson type that includes trackSlug
+type LessonWithTrackSlug = Lesson & { trackSlug?: string };
+
 // Track outlines for each professional diving subject
 const TRACK_OUTLINES = {
   "ndt-inspection": [
@@ -60,10 +63,10 @@ const TRACK_OUTLINES = {
     "Final Assessment"
   ],
   "alst": [
-    "Advanced Life Support",
-    "Emergency Decompression",
-    "Saturation Medical Procedures",
-    "System Troubleshooting",
+    "Life Support System Fundamentals",
+    "Equipment Operation & Maintenance",
+    "Emergency Response Procedures",
+    "Safety Protocols & Procedures",
     "Leadership & Communication",
     "Final Assessment"
   ],
@@ -74,11 +77,19 @@ const TRACK_OUTLINES = {
     "Equipment Operations",
     "Safety Systems",
     "Final Assessment"
+  ],
+  "air-diver-certification": [
+    "Diving Physics Fundamentals",
+    "Gas Laws & Pressure Effects",
+    "Decompression Theory",
+    "Safety Calculations",
+    "Equipment Physics",
+    "Final Assessment"
   ]
 };
 
-function getTrackOutline(trackId: string): string[] {
-  return TRACK_OUTLINES[trackId as keyof typeof TRACK_OUTLINES] || TRACK_OUTLINES["ndt-inspection"];
+function getTrackOutline(trackSlug: string): string[] {
+  return TRACK_OUTLINES[trackSlug as keyof typeof TRACK_OUTLINES] || TRACK_OUTLINES["ndt-inspection"];
 }
 
 // Subject-specific resources for each professional diving subject
@@ -108,22 +119,26 @@ const SUBJECT_RESOURCES = {
     { icon: <Video className="w-4 h-4 mr-2" />, title: "Chamber Operations" }
   ],
   "alst": [
-    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Life Support Manuals" },
-    { icon: <Video className="w-4 h-4 mr-2" />, title: "Advanced Procedures" }
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Assistant Life Support Technician Manuals" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Life Support Procedures" }
   ],
   "lst": [
     { icon: <FileText className="w-4 h-4 mr-2" />, title: "System Documentation" },
     { icon: <Video className="w-4 h-4 mr-2" />, title: "Equipment Training" }
+  ],
+  "air-diver-certification": [
+    { icon: <FileText className="w-4 h-4 mr-2" />, title: "Physics Reference Guides" },
+    { icon: <Video className="w-4 h-4 mr-2" />, title: "Gas Law Demonstrations" }
   ]
 };
 
-function getSubjectResources(trackId: string): Array<{icon: JSX.Element, title: string}> {
-  return SUBJECT_RESOURCES[trackId as keyof typeof SUBJECT_RESOURCES] || SUBJECT_RESOURCES["ndt-inspection"];
+function getSubjectResources(trackSlug: string): Array<{icon: JSX.Element, title: string}> {
+  return SUBJECT_RESOURCES[trackSlug as keyof typeof SUBJECT_RESOURCES] || SUBJECT_RESOURCES["ndt-inspection"];
 }
 
 export default function LessonDetail() {
   const [, params] = useRoute("/lessons/:id");
-  const { data: lesson, isLoading } = useQuery<Lesson>({
+  const { data: lesson, isLoading } = useQuery<LessonWithTrackSlug>({
     queryKey: ["/api/lessons", params?.id],
     enabled: !!params?.id,
   });
@@ -205,7 +220,7 @@ export default function LessonDetail() {
             <div className="flex-1 p-6">
               <EnhancedLessonContent 
                 content={lesson.content || "No content available."}
-                trackSlug={lesson.trackId || 'ndt-inspection'}
+                trackSlug={(lesson as any).trackSlug || 'ndt-inspection'}
                 lessonTitle={lesson.title}
               />
 
@@ -259,7 +274,7 @@ export default function LessonDetail() {
               <div className="mb-6">
                 <h3 className="font-semibold text-slate-900 mb-3">Track Outline</h3>
                 <div className="space-y-2">
-                  {getTrackOutline(lesson?.trackId || 'ndt-inspection').map((item, index) => (
+                  {getTrackOutline((lesson as any)?.trackSlug || 'ndt-inspection').map((item, index) => (
                     <div key={index} className={`flex items-center p-2 rounded-lg cursor-pointer ${
                       index === 0 
                         ? 'bg-primary-50 border border-primary-200' 
@@ -279,7 +294,7 @@ export default function LessonDetail() {
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">Resources</h3>
                 <div className="space-y-2">
-                  {getSubjectResources(lesson?.trackId || 'ndt-inspection').map((resource, index) => (
+                  {getSubjectResources((lesson as any)?.trackSlug || 'ndt-inspection').map((resource, index) => (
                     <a key={index} href="#" className="flex items-center p-2 text-primary-600 hover:bg-primary-50 rounded-lg" data-testid={`link-resource-${index}`}>
                       {resource.icon}
                       <span className="text-sm">{resource.title}</span>
@@ -292,10 +307,10 @@ export default function LessonDetail() {
         </section>
 
         {/* AI Tutor Integration */}
-        <AITutor trackSlug={lesson.trackId || 'ndt-inspection'} lessonTitle={lesson.title} />
+        <AITutor trackSlug={(lesson as any).trackSlug || 'ndt-inspection'} lessonTitle={lesson.title} />
         
         {/* Practice Scenarios */}
-        <PracticeScenario trackSlug={lesson.trackId || 'ndt-inspection'} />
+        <PracticeScenario trackSlug={(lesson as any).trackSlug || 'ndt-inspection'} />
       </main>
     </div>
   );

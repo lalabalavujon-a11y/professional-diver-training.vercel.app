@@ -110,10 +110,10 @@ const mockTracks = [
   },
   {
     id: "alst",
-    title: "Advanced Life Support Technician (ALST)",
+    title: "Assistant Life Support Technician",
     slug: "alst",
-    summary: "Advanced life support operations, emergency decompression protocols, and saturation diving medical procedures.",
-    description: "Expert-level training in life support systems, emergency medical procedures, and saturation diving operations.",
+    summary: "Assistant life support operations, emergency response protocols, and life support system procedures.",
+    description: "Comprehensive training in life support systems, emergency response procedures, and life support operations.",
     level: "Expert",
     duration: "14 weeks",
     lessons: 22,

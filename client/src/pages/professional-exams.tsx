@@ -118,9 +118,9 @@ const professionalExamTracks: ExamTrack[] = [
   },
   {
     id: "alst",
-    title: "Advanced Life Support Technician (ALST)",
+    title: "Assistant Life Support Technician",
     slug: "alst",
-    description: "Advanced life support operations, emergency decompression protocols, and saturation diving medical procedures",
+    description: "Assistant life support operations, emergency response protocols, and life support system procedures",
     questionsCount: 70,
     timeLimit: 120,
     passingScore: 85,

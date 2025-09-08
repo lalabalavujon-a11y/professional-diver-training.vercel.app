@@ -526,7 +526,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           tracks: [
             {
               id: "1",
-              title: "Air Diving Life Support Technician (ALST)",
+              title: "Assistant Life Support Technician",
               slug: "air-diving-life-support-technician",
               order: 1,
               reason: "Foundation certification required for all commercial diving operations"

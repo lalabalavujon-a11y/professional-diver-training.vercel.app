@@ -81,7 +81,10 @@ export class TempDatabaseStorage {
         content: lessons.content,
         createdAt: lessons.createdAt,
         updatedAt: lessons.updatedAt,
-      }).from(lessons).where(eq(lessons.id, id));
+        trackSlug: tracks.slug,
+      }).from(lessons)
+      .leftJoin(tracks, eq(lessons.trackId, tracks.id))
+      .where(eq(lessons.id, id));
       
       return lesson || undefined;
     } catch (error) {

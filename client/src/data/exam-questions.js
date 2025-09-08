@@ -133,7 +133,7 @@ export const examQuestions = {
     {
       id: "alst-1",
       type: "MULTIPLE_CHOICE",
-      prompt: "In advanced life support technician operations, what is the primary responsibility during emergency decompression scenarios?",
+      prompt: "In assistant life support technician operations, what is the primary responsibility during emergency decompression scenarios?",
       options: [
         "To minimize gas consumption during emergency procedures",
         "To maintain life support continuity while managing emergency decompression protocols",
@@ -141,7 +141,7 @@ export const examQuestions = {
         "To standardize emergency response training"
       ],
       correctAnswer: "To maintain life support continuity while managing emergency decompression protocols",
-      explanation: "ALSTs must ensure continuous life support while coordinating emergency decompression procedures to protect diver safety.",
+      explanation: "Assistant Life Support Technicians must ensure continuous life support while coordinating emergency decompression procedures to protect diver safety.",
       points: 3,
       order: 1
     },
@@ -170,10 +170,10 @@ export const examQuestions = {
     {
       id: "alst-4",
       type: "TRUE_FALSE",
-      prompt: "Advanced life support technicians must be certified in hyperbaric medicine to perform emergency medical procedures in saturation environments.",
+      prompt: "Assistant life support technicians must be certified in hyperbaric medicine to perform emergency medical procedures in saturation environments.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "ALSTs require hyperbaric medicine certification to provide emergency medical care in pressurized diving environments.",
+      explanation: "Assistant Life Support Technicians require hyperbaric medicine certification to provide emergency medical care in pressurized diving environments.",
       points: 2,
       order: 4
     },

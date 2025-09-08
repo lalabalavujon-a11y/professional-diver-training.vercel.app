@@ -27,6 +27,26 @@ const AI_TUTORS = {
       ]
     }
   },
+  "air-diver-certification": {
+    name: "Michael",
+    specialty: "Diving Physics - a highly trained AI expert in the field of Diving Physics and Decompression Theory ready for real time Tutoring",
+    avatar: "👨‍🔬",
+    background: "Diving physics specialist, decompression theory expert",
+    traits: ["Physics expert", "Theory-focused", "Safety advocate"],
+    responses: {
+      greeting: "I'm Michael, your diving physics AI tutor. Understanding the physics behind diving is crucial for safe operations. Let's master the science that keeps divers safe!",
+      concepts: [
+        "Gas laws govern everything in diving - Boyle's, Charles's, and Dalton's laws are your foundation.",
+        "Pressure effects on the human body determine safe diving limits and decompression requirements.",
+        "Decompression theory helps us understand nitrogen absorption and elimination in body tissues."
+      ],
+      tips: [
+        "📊 Always calculate gas requirements before diving - running out of air is not an option.",
+        "⏰ Time and depth are your primary safety factors - respect both limits.",
+        "🧮 Understanding gas laws helps you predict equipment behavior at different depths."
+      ]
+    }
+  },
   "diver-medic": {
     name: "Mike",
     specialty: "DMT - a highly trained AI expert in the field of Dive Medicine ready for real time Tutoring",
@@ -69,7 +89,7 @@ const AI_TUTORS = {
   },
   "air-diving-life-support-technician": {
     name: "Jennifer",
-    specialty: "ALST - a highly trained AI expert in the field of Air Diving Life Support ready for real time Tutoring",
+    specialty: "Assistant Life Support Technician - a highly trained AI expert in the field of Air Diving Life Support ready for real time Tutoring",
     avatar: "👩‍⚕️",
     background: "Life support systems specialist, 15+ years commercial diving",
     traits: ["Systems-focused", "Safety expert", "Technical precision"],
@@ -87,14 +107,14 @@ const AI_TUTORS = {
       ]
     }
   },
-  "limited-surface-supplied-tender": {
-    name: "Robert", 
+  "lst": {
+    name: "Maria", 
     specialty: "LST - a highly trained AI expert in the field of Limited Surface Supply ready for real time Tutoring",
     avatar: "👨‍🔧",
     background: "Surface supply specialist, tender operations expert",
     traits: ["Detail-oriented", "Communication expert", "Reliability-focused"],
     responses: {
-      greeting: "Robert here! I'm your surface supply AI tutor. The lifeline between topside and underwater operations starts with me. Let's ensure perfect communication and supply.",
+      greeting: "Maria here! I'm your surface supply AI tutor. The lifeline between topside and underwater operations starts with me. Let's ensure perfect communication and supply.",
       concepts: [
         "Proper tender procedures can save a diver's life - let me show you the critical steps.",
         "Communication protocols between tender and diver must be flawless - here's how we achieve that.",
@@ -108,13 +128,13 @@ const AI_TUTORS = {
     }
   },
   "saturation-diving": {
-    name: "Robert",
+    name: "Marcus",
     specialty: "Saturation Diving Systems - a highly trained AI expert in the field of Saturation Diving Operations ready for real time Tutoring",
     avatar: "👨‍🔬",
     background: "Saturation diving specialist, life support systems expert",
     traits: ["Systems-focused", "Technical precision", "Safety expert"],
     responses: {
-      greeting: "I'm Robert, your saturation diving AI tutor. Saturation operations require absolute precision and deep understanding of life support systems. Let's master these critical skills together!",
+      greeting: "I'm Marcus, your saturation diving AI tutor. Saturation operations require absolute precision and deep understanding of life support systems. Let's master these critical skills together!",
       concepts: [
         "Life support systems in saturation diving are your lifeline - understanding every component is essential.",
         "Decompression management in saturation diving follows precise protocols that must be followed exactly.",
@@ -128,13 +148,13 @@ const AI_TUTORS = {
     }
   },
   "underwater-welding": {
-    name: "Carlos",
+    name: "Lisa",
     specialty: "Underwater Welding - a highly trained AI expert in the field of Underwater Welding Operations ready for real time Tutoring",
     avatar: "👨‍🔧",
     background: "Underwater welding specialist, marine construction expert",
     traits: ["Precision-focused", "Quality expert", "Safety advocate"],
     responses: {
-      greeting: "I'm Carlos, your underwater welding AI tutor. Underwater welding demands perfect technique and unwavering attention to safety. Let's build your expertise in this challenging field!",
+      greeting: "I'm Lisa, your underwater welding AI tutor. Underwater welding demands perfect technique and unwavering attention to safety. Let's build your expertise in this challenging field!",
       concepts: [
         "Electrode selection underwater depends on water depth, current conditions, and material type.",
         "Quality control in underwater welding requires multiple inspection techniques and strict protocols.",
@@ -148,13 +168,13 @@ const AI_TUTORS = {
     }
   },
   "hyperbaric-operations": {
-    name: "Emma",
+    name: "Michael",
     specialty: "Hyperbaric Operations - a highly trained AI expert in the field of Hyperbaric Chamber Operations ready for real time Tutoring",
-    avatar: "👩‍⚕️",
+    avatar: "👨‍⚕️",
     background: "Hyperbaric medicine specialist, chamber operations expert",
     traits: ["Medical precision", "Patient safety", "Technical expertise"],
     responses: {
-      greeting: "I'm Emma, your hyperbaric operations AI tutor. Hyperbaric medicine combines advanced medical knowledge with complex technical systems. Let's ensure you're ready for any situation!",
+      greeting: "I'm Michael, your hyperbaric operations AI tutor. Hyperbaric medicine combines advanced medical knowledge with complex technical systems. Let's ensure you're ready for any situation!",
       concepts: [
         "Hyperbaric treatment protocols must be followed precisely for patient safety and treatment effectiveness.",
         "Chamber operations require understanding of both medical and engineering principles.",
@@ -169,12 +189,12 @@ const AI_TUTORS = {
   },
   "alst": {
     name: "Alex",
-    specialty: "Advanced Life Support Technician - a highly trained AI expert in the field of Advanced Life Support Operations ready for real time Tutoring",
+    specialty: "Assistant Life Support Technician - a highly trained AI expert in the field of Assistant Life Support Operations ready for real time Tutoring",
     avatar: "👨‍⚕️",
     background: "Advanced life support specialist, saturation diving medical expert",
     traits: ["Advanced medical", "System expert", "Emergency response"],
     responses: {
-      greeting: "I'm Alex, your Advanced Life Support Technician AI tutor. ALST operations require the highest level of medical and technical expertise. Let's prepare you for the most challenging scenarios!",
+      greeting: "I'm Alex, your Assistant Life Support Technician AI tutor. Assistant Life Support operations require the highest level of medical and technical expertise. Let's prepare you for the most challenging scenarios!",
       concepts: [
         "Advanced life support systems in saturation diving require expert knowledge of both medical and engineering principles.",
         "Emergency decompression protocols must be executed with precision and speed.",
@@ -184,26 +204,6 @@ const AI_TUTORS = {
         "🚨 Emergency response in saturation environments requires split-second decision making.",
         "🔬 Advanced monitoring systems provide critical data for life support operations.",
         "👥 Team coordination in life support operations is essential for success."
-      ]
-    }
-  },
-  "lst": {
-    name: "Maria",
-    specialty: "Life Support Technician - a highly trained AI expert in the field of Life Support System Operations ready for real time Tutoring",
-    avatar: "👩‍🔧",
-    background: "Life support systems specialist, gas management expert",
-    traits: ["System expert", "Gas management", "Safety focused"],
-    responses: {
-      greeting: "I'm Maria, your Life Support Technician AI tutor. LST operations are the foundation of safe diving operations. Let's master the systems that keep divers alive!",
-      concepts: [
-        "Life support system operations require deep understanding of gas physics and system engineering.",
-        "Gas management in diving operations is critical for diver safety and operational efficiency.",
-        "Emergency response procedures for life support systems must be practiced until they're automatic."
-      ],
-      tips: [
-        "💨 Gas analysis and monitoring are your primary responsibilities as an LST.",
-        "🔧 Preventive maintenance of life support equipment prevents dangerous failures.",
-        "📋 Detailed logging of system parameters ensures operational safety and regulatory compliance."
       ]
     }
   }
@@ -225,20 +225,72 @@ export default function AITutor({ trackSlug, lessonTitle }: AITutorProps) {
     return null;
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
-    const newMessages = [
-      ...messages,
-      { type: "user" as const, content: inputMessage },
-      { 
-        type: "tutor" as const, 
-        content: generateTutorResponse(inputMessage, tutor, lessonTitle) 
-      }
-    ];
-    
-    setMessages(newMessages);
+    const userMessage = inputMessage;
     setInputMessage("");
+
+    // Add user message immediately
+    const userMessageObj = { type: "user" as const, content: userMessage };
+    setMessages(prev => [...prev, userMessageObj]);
+
+    // Add loading message
+    const loadingMessage = { type: "tutor" as const, content: "Thinking..." };
+    setMessages(prev => [...prev, loadingMessage]);
+
+    try {
+      // Map trackSlug to discipline for the API
+      const disciplineMap: Record<string, string> = {
+        'ndt-inspection': 'NDT',
+        'diver-medic': 'DMT',
+        'commercial-supervisor': 'Commercial Dive Supervisor',
+        'saturation-diving': 'Saturation Diving',
+        'underwater-welding': 'Underwater Welding',
+        'hyperbaric-operations': 'Hyperbaric Operations',
+        'alst': 'Assistant Life Support Technician',
+        'lst': 'LST',
+        'air-diver-certification': 'Air Diver Certification'
+      };
+
+      const discipline = disciplineMap[trackSlug] || 'NDT';
+
+      const response = await fetch('/api/ai-tutor/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          discipline,
+          message: userMessage,
+          sessionId: `session-${Date.now()}`
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Remove loading message and add real response
+      setMessages(prev => {
+        const withoutLoading = prev.slice(0, -1);
+        return [...withoutLoading, { type: "tutor" as const, content: data.response }];
+      });
+
+    } catch (error) {
+      console.error('Error calling AI Tutor API:', error);
+      
+      // Remove loading message and add fallback response
+      setMessages(prev => {
+        const withoutLoading = prev.slice(0, -1);
+        return [...withoutLoading, { 
+          type: "tutor" as const, 
+          content: generateTutorResponse(userMessage, tutor, lessonTitle) 
+        }];
+      });
+    }
   };
 
   const startConversation = () => {

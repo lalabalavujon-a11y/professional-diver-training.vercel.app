@@ -106,7 +106,7 @@ Available Training Tracks:
 3. Commercial Dive Supervisor - Leadership and dive operation management
 4. Air Diver Certification - Fundamental air diving skills
 5. Saturation Diver Training - Deep-sea saturation diving operations
-6. Assistant Life Support Technician (ALST) - Life support system operation
+6. Assistant Life Support Technician - Life support system operation
 7. Life Support Technician (LST) - Advanced life support systems
 
 Please respond with a JSON object containing:

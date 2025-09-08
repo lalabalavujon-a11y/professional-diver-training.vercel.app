@@ -118,11 +118,11 @@ Career Path:
         }
       }));
 
-      // ALST (Advanced Life Support Technician) Content
+      // Assistant Life Support Technician Content
       documents.push(new Document({
-        pageContent: `Advanced Life Support Technician (ALST) Training
+        pageContent: `Assistant Life Support Technician Training
 
-ALSTs provide advanced life support services for complex commercial diving operations, including saturation diving and deep water work.
+Assistant Life Support Technicians provide life support services for commercial diving operations, including life support systems and emergency response.
 
 Advanced Responsibilities:
 - Saturation diving life support
@@ -152,15 +152,15 @@ Industry Standards:
 - Professional certification requirements
 
 Career Advancement:
-- ALST certification programs
-- Saturation diving specialization
+- Assistant Life Support Technician certification programs
+- Life support system specialization
 - Supervisor certification opportunities
 - Advanced technical training`,
         metadata: {
-          discipline: 'ALST',
-          category: 'advanced-life-support',
-          difficulty: 'advanced',
-          certification: 'ALST',
+          discipline: 'Assistant Life Support Technician',
+          category: 'assistant-life-support',
+          difficulty: 'intermediate',
+          certification: 'Assistant Life Support Technician',
           industryStandards: ['IMCA', 'ADCI', 'OSHA']
         }
       }));

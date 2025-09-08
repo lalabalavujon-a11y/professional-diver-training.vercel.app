@@ -46,12 +46,12 @@ export class AILearningPathService {
   private availableTracks: TrackInfo[] = [
     {
       id: "1",
-      title: "Air Diving Life Support Technician (ALST)",
+      title: "Assistant Life Support Technician",
       slug: "air-diving-life-support-technician",
       summary: "Foundation course for air diving support operations and safety systems",
       difficulty: "Beginner",
       prerequisites: [],
-      specialization: "ALST"
+      specialization: "Assistant Life Support Technician"
     },
     {
       id: "2", 
@@ -59,7 +59,7 @@ export class AILearningPathService {
       slug: "life-support-technician",
       summary: "Advanced life support systems for commercial diving operations",
       difficulty: "Intermediate",
-      prerequisites: ["ALST"],
+      prerequisites: ["Assistant Life Support Technician"],
       specialization: "LST"
     },
     {
@@ -68,7 +68,7 @@ export class AILearningPathService {
       slug: "diver-medic-technician", 
       summary: "Emergency medical training for diving operations and hyperbaric medicine",
       difficulty: "Advanced",
-      prerequisites: ["ALST"],
+      prerequisites: ["Assistant Life Support Technician"],
       specialization: "DMT"
     },
     {
@@ -77,7 +77,7 @@ export class AILearningPathService {
       slug: "non-destructive-testing-underwater-inspection",
       summary: "Specialized underwater inspection techniques and equipment certification",
       difficulty: "Advanced", 
-      prerequisites: ["ALST", "Commercial Experience"],
+      prerequisites: ["Assistant Life Support Technician", "Commercial Experience"],
       specialization: "NDT"
     },
     {
@@ -95,7 +95,7 @@ export class AILearningPathService {
       slug: "surface-supply-enclosed-diving",
       summary: "Specialized training for surface-supplied diving in enclosed environments", 
       difficulty: "Intermediate",
-      prerequisites: ["ALST"],
+      prerequisites: ["Assistant Life Support Technician"],
       specialization: "SSED"
     },
     {
@@ -192,7 +192,7 @@ ${tracksDescription}
 
 REQUIREMENTS:
 1. Create 2-3 different learning path options
-2. Ensure logical prerequisite progression (ALST before LST, etc.)
+2. Ensure logical prerequisite progression (Assistant Life Support Technician before LST, etc.)
 3. Match tracks to user's goals and experience level
 4. Consider time commitment for realistic timelines
 5. Provide clear reasoning for each recommendation
@@ -218,14 +218,14 @@ Focus on career advancement, safety certification requirements, and industry dem
         tracks: [
           {
             id: "1",
-            title: "Air Diving Life Support Technician (ALST)",
+            title: "Assistant Life Support Technician",
             slug: "air-diving-life-support-technician",
             order: 1,
             reason: "Essential foundation for all commercial diving operations"
           }
         ],
         confidence: 85,
-        reasoning: "As a beginner, starting with ALST provides the fundamental knowledge and certification required for entry into commercial diving."
+        reasoning: "As a beginner, starting with Assistant Life Support Technician provides the fundamental knowledge and certification required for entry into commercial diving."
       };
     }
 

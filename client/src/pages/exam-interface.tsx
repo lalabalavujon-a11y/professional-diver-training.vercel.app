@@ -175,7 +175,7 @@ export default function ExamInterface() {
       'saturation-diving': 'Saturation Diving Systems Practice Test',
       'underwater-welding': 'Advanced Underwater Welding Practice Test',
       'hyperbaric-operations': 'Hyperbaric Chamber Operations Practice Test',
-      'alst': 'Advanced Life Support Technician (ALST) Practice Test',
+      'alst': 'Assistant Life Support Technician Practice Test',
       'lst': 'Life Support Technician (LST) Practice Test'
     };
     return titles[slug] || 'Professional Diving Practice Test';
