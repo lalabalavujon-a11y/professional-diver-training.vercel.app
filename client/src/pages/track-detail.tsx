@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute } from "wouter";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "wouter";
@@ -18,7 +18,7 @@ export default function TrackDetail() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
@@ -38,7 +38,7 @@ export default function TrackDetail() {
   if (!track) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
             <p className="text-slate-500" data-testid="text-track-not-found">Track not found</p>
@@ -50,7 +50,7 @@ export default function TrackDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">

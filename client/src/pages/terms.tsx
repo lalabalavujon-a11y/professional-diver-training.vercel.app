@@ -1,10 +1,10 @@
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Terms() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card>

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Brain, Target, Clock, TrendingUp, ChevronRight, Lightbulb, Users, Award } from "lucide-react";
 import { useLocation } from "wouter";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -178,7 +178,7 @@ export default function LearningPath() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}

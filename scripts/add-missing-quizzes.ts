@@ -1,5 +1,5 @@
 import { db } from '../server/db.js';
-import { tracks, lessons, quizzes, questions } from '@shared/schema-sqlite';
+import { tracks, lessons, quizzes, questions } from '../shared/schema-sqlite.js';
 import { eq } from 'drizzle-orm';
 
 /**

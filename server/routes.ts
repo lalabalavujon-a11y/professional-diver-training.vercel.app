@@ -25,6 +25,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Local development upload endpoint
+  app.post("/api/objects/upload-local/:objectId", async (req, res) => {
+    try {
+      const { objectId } = req.params;
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      // Create uploads directory if it doesn't exist
+      const uploadsDir = path.join(process.cwd(), 'uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      
+      // For now, just return success - the actual file handling would be done by the frontend
+      res.json({ 
+        success: true, 
+        objectId,
+        message: "Local upload endpoint - file handling not implemented yet" 
+      });
+    } catch (error) {
+      console.error("Error in local upload:", error);
+      res.status(500).json({ error: "Failed to handle local upload" });
+    }
+  });
+
   app.get("/objects/:objectPath(*)", async (req, res) => {
     try {
       const objectStorageService = new ObjectStorageService();
@@ -919,6 +944,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(invite);
     } catch (error) {
       res.status(500).json({ error: "Failed to validate invite" });
+    }
+  });
+
+  // Laura Oracle routes
+  app.post("/api/laura-oracle/chat", async (req, res) => {
+    try {
+      const { chatWithLauraOracle } = await import('./api/laura-oracle');
+      await chatWithLauraOracle(req, res);
+    } catch (error) {
+      console.error('Laura Oracle chat error:', error);
+      res.status(500).json({ error: 'Laura Oracle service unavailable' });
+    }
+  });
+
+  app.get("/api/laura-oracle/analytics", async (req, res) => {
+    try {
+      const { getPlatformAnalytics } = await import('./api/laura-oracle');
+      await getPlatformAnalytics(req, res);
+    } catch (error) {
+      console.error('Laura Oracle analytics error:', error);
+      res.status(500).json({ error: 'Laura Oracle analytics unavailable' });
+    }
+  });
+
+  app.post("/api/laura-oracle/admin-task", async (req, res) => {
+    try {
+      const { executeAdminTask } = await import('./api/laura-oracle');
+      await executeAdminTask(req, res);
+    } catch (error) {
+      console.error('Laura Oracle admin task error:', error);
+      res.status(500).json({ error: 'Laura Oracle admin service unavailable' });
+    }
+  });
+
+  app.post("/api/laura-oracle/learn-objectives", async (req, res) => {
+    try {
+      const { learnFromObjectives } = await import('./api/laura-oracle');
+      await learnFromObjectives(req, res);
+    } catch (error) {
+      console.error('Laura Oracle learning error:', error);
+      res.status(500).json({ error: 'Laura Oracle learning service unavailable' });
+    }
+  });
+
+  app.get("/api/laura-oracle/info", async (req, res) => {
+    try {
+      const { getLauraOracleInfo } = await import('./api/laura-oracle');
+      await getLauraOracleInfo(req, res);
+    } catch (error) {
+      console.error('Laura Oracle info error:', error);
+      res.status(500).json({ error: 'Laura Oracle info unavailable' });
+    }
+  });
+
+  app.post("/api/laura-oracle/voice", async (req, res) => {
+    try {
+      const { generateVoiceResponse } = await import('./api/laura-oracle');
+      await generateVoiceResponse(req, res);
+    } catch (error) {
+      console.error('Laura Oracle voice error:', error);
+      res.status(500).json({ error: 'Laura Oracle voice service unavailable' });
     }
   });
 

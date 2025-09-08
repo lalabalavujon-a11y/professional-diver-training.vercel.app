@@ -17,7 +17,9 @@
     "debug:install": "node ./super-debug-agent/scripts/install.js",
     "debug:configure": "node ./super-debug-agent/scripts/configure.js",
     "dev:reset": "bash -lc 'kill -9 $(lsof -t -iTCP:3000 -sTCP:LISTEN) 2>/dev/null || true; kill -9 $(lsof -t -iTCP:5000 -sTCP:LISTEN) 2>/dev/null || true; npm run dev:all'",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "init-laura-oracle": "tsx scripts/init-laura-oracle.ts",
+    "laura-oracle:test": "tsx scripts/init-laura-oracle.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.17.0",

@@ -36,6 +36,10 @@ export class ObjectStorageService {
   getPrivateObjectDir(): string {
     const dir = process.env.PRIVATE_OBJECT_DIR || "";
     if (!dir) {
+      // For local development, use a local directory
+      if (process.env.NODE_ENV === 'development') {
+        return 'local-dev-uploads';
+      }
       throw new Error(
         "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' " +
           "tool and set PRIVATE_OBJECT_DIR env var."
@@ -46,6 +50,13 @@ export class ObjectStorageService {
 
   async getObjectEntityUploadURL(): Promise<string> {
     const privateObjectDir = this.getPrivateObjectDir();
+    
+    // For local development, return a mock URL
+    if (process.env.NODE_ENV === 'development' && privateObjectDir === 'local-dev-uploads') {
+      const objectId = randomUUID();
+      return `http://localhost:5000/api/objects/upload-local/${objectId}`;
+    }
+
     if (!privateObjectDir) {
       throw new Error(
         "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' " +

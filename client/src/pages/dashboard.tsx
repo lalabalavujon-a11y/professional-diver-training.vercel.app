@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import UserStatusBadge from "@/components/user-status-badge";
 import { CheckCircle, AlertTriangle, Flame } from "lucide-react";
 import { Link } from "wouter";
@@ -23,7 +23,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* User Status Badge */}

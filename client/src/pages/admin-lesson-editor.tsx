@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute } from "wouter";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -75,7 +75,7 @@ export default function AdminLessonEditor() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -100,7 +100,7 @@ export default function AdminLessonEditor() {
   if (!lesson) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
             <p className="text-slate-500" data-testid="text-lesson-not-found">
@@ -114,7 +114,7 @@ export default function AdminLessonEditor() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

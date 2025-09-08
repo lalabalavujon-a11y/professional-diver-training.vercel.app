@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute } from "wouter";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import AITutor from "@/components/ai-tutor";
 import PracticeScenario from "@/components/practice-scenario";
 import EnhancedLessonContent from "@/components/enhanced-lesson-content";
@@ -146,7 +146,7 @@ export default function LessonDetail() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -170,7 +170,7 @@ export default function LessonDetail() {
   if (!lesson) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
             <p className="text-slate-500" data-testid="text-lesson-not-found">Lesson not found</p>
@@ -182,7 +182,7 @@ export default function LessonDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

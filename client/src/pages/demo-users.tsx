@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import UserStatusBadge from "@/components/user-status-badge";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 
 const demoUsers = [
   {
@@ -81,7 +81,7 @@ export default function DemoUsers() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">

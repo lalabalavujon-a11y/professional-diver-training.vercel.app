@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,7 @@ export default function Analytics() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
@@ -67,7 +67,7 @@ export default function Analytics() {
   if (!analytics) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Alert className="border-red-200 bg-red-50">
             <AlertDescription className="text-red-800">
@@ -138,7 +138,7 @@ export default function Analytics() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">

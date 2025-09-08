@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Timer, Mic, MicOff, Volume2, ChevronLeft, ChevronRight, Clock, Brain, FileText } from "lucide-react";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 // Import comprehensive exam questions for SRS (Spaced Repetition System)
 // @ts-ignore - Content file import
 import { examQuestions as fullExamQuestions } from '../../../content/exam-questions.js';
@@ -195,7 +195,7 @@ export default function ExamInterface() {
   if ((match || resultsMatch) && totalQuestions === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        <RoleBasedNavigation />
         <div className="container mx-auto px-4 py-8">
           <Card>
             <CardContent className="p-8 text-center">
@@ -317,7 +317,7 @@ export default function ExamInterface() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Exam Header */}

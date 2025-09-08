@@ -45,6 +45,21 @@ const profileSchema = z.object({
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
+// Helper function to convert file to base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result as string;
+      // Remove the data URL prefix to get just the base64 string
+      const base64 = result.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = error => reject(error);
+  });
+};
+
 export default function ProfileSettings() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -128,18 +143,8 @@ export default function ProfileSettings() {
   // Profile picture upload mutation
   const uploadPictureMutation = useMutation({
     mutationFn: async (file: File) => {
-      // Get upload URL
-      const uploadResponse = await apiRequest('POST', '/api/objects/upload');
-      const { uploadURL } = await uploadResponse.json();
-      
-      // Upload file to object storage
-      await fetch(uploadURL, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
+      // For local development, create a mock URL
+      const mockProfilePictureURL = `data:${file.type};base64,${await fileToBase64(file)}`;
       
       // Update user profile with new picture URL
       const userEmail = localStorage.getItem('userEmail') || currentUser?.email;
@@ -149,7 +154,7 @@ export default function ProfileSettings() {
           'Content-Type': 'application/json',
           'x-user-email': userEmail || '',
         },
-        body: JSON.stringify({ profilePictureURL: uploadURL }),
+        body: JSON.stringify({ profilePictureURL: mockProfilePictureURL }),
       });
       
       if (!response.ok) {

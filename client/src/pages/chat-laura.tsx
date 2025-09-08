@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, ArrowLeft, Headphones, Settings, User, HelpCircle } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Send, ArrowLeft, Headphones, Settings, User, HelpCircle, BarChart3, Shield, Brain, Zap, Activity, Database, Users, TrendingUp, Volume2, VolumeX, Play, Pause } from "lucide-react";
 import { Link } from "wouter";
 import diverWellLogo from "@assets/DIVER_WELL_TRAINING-500x500-rbg-preview_1756088331820.png";
 
@@ -13,19 +14,58 @@ interface Message {
   text: string;
   sender: 'user' | 'laura';
   timestamp: Date;
+  analytics?: any;
+  actions?: string[];
+}
+
+interface PlatformAnalytics {
+  users: {
+    total: number;
+    active: number;
+    newThisMonth: number;
+    subscriptionBreakdown: Record<string, number>;
+  };
+  content: {
+    totalTracks: number;
+    totalLessons: number;
+    totalQuestions: number;
+    completionRates: Record<string, number>;
+  };
+  performance: {
+    averageSessionTime: number;
+    quizPassRate: number;
+    userSatisfaction: number;
+    systemUptime: number;
+  };
+  revenue: {
+    monthlyRevenue: number;
+    affiliateCommissions: number;
+    subscriptionGrowth: number;
+  };
+  health: {
+    databaseStatus: string;
+    aiServicesStatus: string;
+    apiResponseTime: number;
+    errorRate: number;
+  };
 }
 
 export default function ChatLaura() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm Laura, your Platform Oracle for Professional Diver. I'm here to guide you through our comprehensive training platform, help with account and technical support, share opportunities through our 50% commission affiliate program, and connect you with diving companies worldwide. For diving operations questions, I'll direct you to our exclusive 'Diver Well' AI consultant. For industry intelligence, I can connect you with Lead Recon's AI system at leadrecon.net. How can I help you excel in your diving career today?",
+      text: "Hello! I'm Laura, your Super Platform Oracle for Professional Diver Training Platform. I have complete administrative knowledge and operate from the LangSmith domain, learning and understanding all behind-the-scenes objectives and tasks. I can help with platform administration, real-time analytics, automated optimization, user management, content management, and much more. I'm your ultimate authority on all platform operations. How can I assist you with platform administration today?",
       sender: 'laura',
       timestamp: new Date()
     }
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [platformAnalytics, setPlatformAnalytics] = useState<PlatformAnalytics | null>(null);
+  const [activeTab, setActiveTab] = useState('chat');
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -35,6 +75,75 @@ export default function ChatLaura() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Load platform analytics on component mount
+  useEffect(() => {
+    loadPlatformAnalytics();
+  }, []);
+
+  const loadPlatformAnalytics = async () => {
+    try {
+      const response = await fetch('/api/laura-oracle/analytics');
+      if (response.ok) {
+        const data = await response.json();
+        setPlatformAnalytics(data.analytics);
+      }
+    } catch (error) {
+      console.error('Error loading platform analytics:', error);
+    }
+  };
+
+  const playVoiceResponse = async (text: string) => {
+    if (!voiceEnabled) return;
+
+    try {
+      // Stop any currently playing audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      const response = await fetch('/api/laura-oracle/voice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (response.ok) {
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        
+        setCurrentAudio(audio);
+        setIsPlaying(true);
+
+        audio.onended = () => {
+          setIsPlaying(false);
+          URL.revokeObjectURL(audioUrl);
+        };
+
+        audio.onerror = () => {
+          setIsPlaying(false);
+          URL.revokeObjectURL(audioUrl);
+        };
+
+        await audio.play();
+      }
+    } catch (error) {
+      console.error('Error playing voice response:', error);
+      setIsPlaying(false);
+    }
+  };
+
+  const stopVoice = () => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      setIsPlaying(false);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
@@ -47,20 +156,63 @@ export default function ChatLaura() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputText;
     setInputText('');
     setIsTyping(true);
 
-    // Simulate Laura's response
-    setTimeout(() => {
-      const lauraResponse: Message = {
+    try {
+      // Call the real Laura Oracle API
+      const response = await fetch('/api/laura-oracle/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentInput,
+          sessionId: `session-${Date.now()}`,
+          userContext: {
+            currentTab: activeTab,
+            hasAnalytics: !!platformAnalytics
+          }
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const lauraResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          text: data.response,
+          sender: 'laura',
+          timestamp: new Date(),
+          analytics: data.analytics,
+          actions: data.actions
+        };
+        setMessages(prev => [...prev, lauraResponse]);
+        
+        // Update platform analytics if provided
+        if (data.analytics) {
+          setPlatformAnalytics(data.analytics);
+        }
+
+        // Play voice response if enabled
+        if (voiceEnabled && data.response) {
+          await playVoiceResponse(data.response);
+        }
+      } else {
+        throw new Error('Failed to get response from Laura Oracle');
+      }
+    } catch (error) {
+      console.error('Error calling Laura Oracle:', error);
+      const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: getLauraResponse(inputText),
+        text: "I apologize, but I'm experiencing a technical issue. Please try again or contact the admin team directly.",
         sender: 'laura',
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, lauraResponse]);
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const getLauraResponse = (userInput: string): string => {
@@ -140,7 +292,7 @@ export default function ChatLaura() {
               />
               <div>
                 <div className="text-lg font-bold text-slate-900">Professional Diver</div>
-                <div className="text-xs text-slate-500">Laura - Platform Oracle</div>
+                <div className="text-xs text-slate-500">Laura - Super Platform Oracle</div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -155,47 +307,55 @@ export default function ChatLaura() {
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Laura Info Sidebar */}
+          {/* Laura Oracle Info Sidebar */}
           <div className="lg:col-span-1">
             <Card className="border-purple-200 bg-gradient-to-b from-purple-50 to-white">
               <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Headphones className="w-8 h-8 text-purple-600" />
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Brain className="w-8 h-8 text-purple-600" />
                 </div>
                 <CardTitle className="text-xl">Laura</CardTitle>
-                <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                  Platform Oracle
+                <Badge variant="secondary" className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700">
+                  Super Platform Oracle
                 </Badge>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-sm text-slate-900 mb-2">Your Platform Oracle for:</h4>
+                    <h4 className="font-semibold text-sm text-slate-900 mb-2">Oracle Capabilities:</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center space-x-2 text-slate-600">
-                        <User className="w-3 h-3" />
-                        <span>Platform Guidance & Support</span>
+                        <Shield className="w-3 h-3" />
+                        <span>Complete Platform Administration</span>
                       </div>
                       <div className="flex items-center space-x-2 text-slate-600">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
-                        </svg>
-                        <span>50% Commission Affiliate Program</span>
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Real-time Analytics & Monitoring</span>
                       </div>
                       <div className="flex items-center space-x-2 text-slate-600">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd"/>
-                        </svg>
-                        <span>Industry Connections Worldwide</span>
+                        <Zap className="w-3 h-3" />
+                        <span>Automated Task Execution</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-slate-600">
+                        <Users className="w-3 h-3" />
+                        <span>User Management & Support</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-slate-600">
+                        <Database className="w-3 h-3" />
+                        <span>LangSmith Domain Learning</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-slate-600">
+                        <Volume2 className="w-3 h-3" />
+                        <span>Voice Communication (Alloy)</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="bg-blue-50 p-3 rounded-lg">
-                    <p className="text-xs text-blue-800">
-                      🚀 <strong>Oracle Tip:</strong> Ask me about our 50% affiliate program, platform optimization, industry connections, or technical support. For diving operations, I'll connect you with Diver Well AI!
+                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-3 rounded-lg">
+                    <p className="text-xs text-purple-800">
+                      🚀 <strong>Oracle Tip:</strong> I operate from the LangSmith domain with voice capabilities using the friendly Alloy voice! Ask me about platform optimization, user analytics, content management, or any administrative task. I can speak my responses too!
                     </p>
                   </div>
                 </div>
@@ -203,89 +363,359 @@ export default function ChatLaura() {
             </Card>
           </div>
 
-          {/* Chat Interface */}
+          {/* Main Content Area */}
           <div className="lg:col-span-3">
-            <Card className="h-[600px] flex flex-col">
-              <CardHeader className="border-b">
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                    <Headphones className="w-4 h-4 text-purple-600" />
-                  </div>
-                  <span>Chat with Laura</span>
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent className="flex-1 flex flex-col p-0">
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div className={`flex space-x-2 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback className={message.sender === 'user' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}>
-                            {message.sender === 'user' ? 'U' : 'L'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className={`rounded-lg p-3 ${
-                          message.sender === 'user' 
-                            ? 'bg-blue-600 text-white' 
-                            : 'bg-slate-100 text-slate-900'
-                        }`}>
-                          <p className="text-sm">{message.text}</p>
-                          <p className="text-xs mt-1 opacity-70">
-                            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </p>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="chat" className="flex items-center space-x-2">
+                  <Headphones className="w-4 h-4" />
+                  <span>Chat</span>
+                </TabsTrigger>
+                <TabsTrigger value="analytics" className="flex items-center space-x-2">
+                  <BarChart3 className="w-4 h-4" />
+                  <span>Analytics</span>
+                </TabsTrigger>
+                <TabsTrigger value="admin" className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4" />
+                  <span>Admin</span>
+                </TabsTrigger>
+                <TabsTrigger value="monitoring" className="flex items-center space-x-2">
+                  <Activity className="w-4 h-4" />
+                  <span>Monitoring</span>
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Chat Tab */}
+              <TabsContent value="chat" className="mt-6">
+                <Card className="h-[600px] flex flex-col">
+                  <CardHeader className="border-b">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center">
+                          <Brain className="w-4 h-4 text-purple-600" />
                         </div>
+                        <span>Chat with Laura Oracle</span>
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      </CardTitle>
+                      
+                      {/* Voice Controls */}
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setVoiceEnabled(!voiceEnabled)}
+                          className={`flex items-center space-x-1 ${
+                            voiceEnabled ? 'text-green-600 border-green-200' : 'text-gray-400'
+                          }`}
+                        >
+                          {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                          <span className="text-xs">Voice</span>
+                        </Button>
+                        
+                        {isPlaying && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={stopVoice}
+                            className="flex items-center space-x-1 text-red-600 border-red-200"
+                          >
+                            <Pause className="w-4 h-4" />
+                            <span className="text-xs">Stop</span>
+                          </Button>
+                        )}
                       </div>
                     </div>
-                  ))}
+                  </CardHeader>
                   
-                  {isTyping && (
-                    <div className="flex justify-start">
-                      <div className="flex space-x-2 max-w-[80%]">
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-purple-100 text-purple-600">L</AvatarFallback>
-                        </Avatar>
-                        <div className="bg-slate-100 rounded-lg p-3">
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <CardContent className="flex-1 flex flex-col p-0">
+                    {/* Messages */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      {messages.map((message) => (
+                        <div
+                          key={message.id}
+                          className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div className={`flex space-x-2 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                            <Avatar className="w-8 h-8">
+                              <AvatarFallback className={message.sender === 'user' ? 'bg-blue-100 text-blue-600' : 'bg-gradient-to-br from-purple-100 to-blue-100 text-purple-600'}>
+                                {message.sender === 'user' ? 'U' : 'L'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className={`rounded-lg p-3 ${
+                              message.sender === 'user' 
+                                ? 'bg-blue-600 text-white' 
+                                : 'bg-gradient-to-br from-slate-50 to-slate-100 text-slate-900 border border-slate-200'
+                            }`}>
+                              <p className="text-sm">{message.text}</p>
+                              <p className="text-xs mt-1 opacity-70">
+                                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                              {message.actions && message.actions.length > 0 && (
+                                <div className="mt-2 flex flex-wrap gap-1">
+                                  {message.actions.map((action, index) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {action.replace(/_/g, ' ')}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              )}
+                              {message.sender === 'laura' && voiceEnabled && (
+                                <div className="mt-2 flex items-center space-x-1">
+                                  <Volume2 className="w-3 h-3 text-purple-500" />
+                                  <span className="text-xs text-purple-600">Voice available</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {isTyping && (
+                        <div className="flex justify-start">
+                          <div className="flex space-x-2 max-w-[80%]">
+                            <Avatar className="w-8 h-8">
+                              <AvatarFallback className="bg-gradient-to-br from-purple-100 to-blue-100 text-purple-600">L</AvatarFallback>
+                            </Avatar>
+                            <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg p-3 border border-slate-200">
+                              <div className="flex space-x-1">
+                                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+                                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <div ref={messagesEndRef} />
+                    </div>
+                    
+                    {/* Input */}
+                    <div className="border-t p-4">
+                      <div className="flex space-x-2">
+                        <Input
+                          value={inputText}
+                          onChange={(e) => setInputText(e.target.value)}
+                          onKeyPress={handleKeyPress}
+                          placeholder="Ask Laura about platform administration, analytics, or optimization..."
+                          className="flex-1"
+                          data-testid="input-chat-message"
+                        />
+                        <Button 
+                          onClick={handleSendMessage}
+                          disabled={!inputText.trim()}
+                          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                          data-testid="button-send-message"
+                        >
+                          <Send className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Analytics Tab */}
+              <TabsContent value="analytics" className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {platformAnalytics ? (
+                    <>
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold">{platformAnalytics.users.total}</div>
+                          <p className="text-xs text-muted-foreground">
+                            {platformAnalytics.users.active} active users
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">Content</CardTitle>
+                          <Database className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold">{platformAnalytics.content.totalTracks}</div>
+                          <p className="text-xs text-muted-foreground">
+                            {platformAnalytics.content.totalLessons} lessons, {platformAnalytics.content.totalQuestions} questions
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">Quiz Pass Rate</CardTitle>
+                          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold">{platformAnalytics.performance.quizPassRate.toFixed(1)}%</div>
+                          <p className="text-xs text-muted-foreground">
+                            System uptime: {platformAnalytics.performance.systemUptime}%
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">System Health</CardTitle>
+                          <Activity className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-green-600">{platformAnalytics.health.databaseStatus}</div>
+                          <p className="text-xs text-muted-foreground">
+                            API Response: {platformAnalytics.health.apiResponseTime}ms
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">AI Services</CardTitle>
+                          <Brain className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-green-600">{platformAnalytics.health.aiServicesStatus}</div>
+                          <p className="text-xs text-muted-foreground">
+                            Error rate: {platformAnalytics.health.errorRate}%
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+                          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold">${platformAnalytics.revenue.monthlyRevenue}</div>
+                          <p className="text-xs text-muted-foreground">
+                            Affiliate: ${platformAnalytics.revenue.affiliateCommissions}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </>
+                  ) : (
+                    <div className="col-span-full flex items-center justify-center h-64">
+                      <div className="text-center">
+                        <Activity className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground">Loading platform analytics...</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+
+              {/* Admin Tab */}
+              <TabsContent value="admin" className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Shield className="w-5 h-5" />
+                        <span>Administrative Tasks</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <Button className="w-full justify-start" variant="outline">
+                        <Users className="w-4 h-4 mr-2" />
+                        User Management
+                      </Button>
+                      <Button className="w-full justify-start" variant="outline">
+                        <Database className="w-4 h-4 mr-2" />
+                        Content Management
+                      </Button>
+                      <Button className="w-full justify-start" variant="outline">
+                        <Settings className="w-4 h-4 mr-2" />
+                        System Configuration
+                      </Button>
+                      <Button className="w-full justify-start" variant="outline">
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        Performance Optimization
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Brain className="w-5 h-5" />
+                        <span>LangSmith Domain</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+                        <p className="text-sm text-purple-800">
+                          Laura operates from the LangSmith domain, continuously learning from platform interactions and objectives.
+                        </p>
+                      </div>
+                      <Button className="w-full justify-start" variant="outline">
+                        <Brain className="w-4 h-4 mr-2" />
+                        View Learning Objectives
+                      </Button>
+                      <Button className="w-full justify-start" variant="outline">
+                        <Activity className="w-4 h-4 mr-2" />
+                        Domain Analytics
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              {/* Monitoring Tab */}
+              <TabsContent value="monitoring" className="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Activity className="w-5 h-5" />
+                      <span>Real-time Platform Monitoring</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">System Status</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="text-sm">Database</span>
+                              <Badge variant="outline" className="text-green-600">Healthy</Badge>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-sm">AI Services</span>
+                              <Badge variant="outline" className="text-green-600">Operational</Badge>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-sm">API Response</span>
+                              <Badge variant="outline" className="text-green-600">150ms</Badge>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Performance Metrics</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="text-sm">Uptime</span>
+                              <span className="text-sm font-medium">99.9%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-sm">Error Rate</span>
+                              <span className="text-sm font-medium">0.1%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-sm">Active Users</span>
+                              <span className="text-sm font-medium">{platformAnalytics?.users.active || 0}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  )}
-                  <div ref={messagesEndRef} />
-                </div>
-                
-                {/* Input */}
-                <div className="border-t p-4">
-                  <div className="flex space-x-2">
-                    <Input
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      placeholder="Type your message..."
-                      className="flex-1"
-                      data-testid="input-chat-message"
-                    />
-                    <Button 
-                      onClick={handleSendMessage}
-                      disabled={!inputText.trim()}
-                      className="bg-purple-600 hover:bg-purple-700"
-                      data-testid="button-send-message"
-                    >
-                      <Send className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </main>

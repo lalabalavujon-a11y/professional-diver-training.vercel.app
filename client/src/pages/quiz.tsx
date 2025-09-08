@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute } from "wouter";
-import Navigation from "@/components/navigation";
+import RoleBasedNavigation from "@/components/role-based-navigation";
 import QuizQuestion from "@/components/quiz-question";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -141,7 +141,7 @@ export default function Quiz() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="animate-pulse">
@@ -163,7 +163,7 @@ export default function Quiz() {
   if (!quiz || !quiz.questions || quiz.questions.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        <Navigation />
+        <RoleBasedNavigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
             <p className="text-slate-500" data-testid="text-quiz-not-found">
@@ -221,7 +221,7 @@ export default function Quiz() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-      <Navigation />
+      <RoleBasedNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
